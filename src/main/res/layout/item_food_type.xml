@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="180dp"
+    android:id="@+id/tv_food_type_name"
+    android:textSize="18sp"
+    android:gravity="center"
+    android:layout_height="70dp">
+
+</TextView>

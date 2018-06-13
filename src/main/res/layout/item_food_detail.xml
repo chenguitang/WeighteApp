@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.posin.weight.view.FoodCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fc_food_detail"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginTop="10dp"
+    android:background="@color/light_white">
+
+
+</com.posin.weight.view.FoodCardView>

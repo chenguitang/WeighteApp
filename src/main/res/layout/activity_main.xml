@@ -10,7 +10,7 @@
     <include
         layout="@layout/common_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="50dp" />
+        android:layout_height="40dp" />
 
 
     <LinearLayout
@@ -26,13 +26,7 @@
         <include layout="@layout/davide_vertical_line" />
 
         <!--右边内容-->
-        <include layout="@layout/right_menu_layout"/>
-        <!--<RelativeLayout-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_weight="5">-->
-
-        <!--</RelativeLayout>-->
+        <include layout="@layout/layout_right_menu"/>
     </LinearLayout>
 
 

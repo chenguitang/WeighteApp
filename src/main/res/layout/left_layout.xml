@@ -11,7 +11,7 @@
     <RelativeLayout
         android:id="@+id/rl_weight_root"
         android:layout_width="match_parent"
-        android:layout_height="150dp">
+        android:layout_height="120dp">
 
         <TextView
             android:id="@+id/tv_weight_tip"
@@ -28,9 +28,8 @@
             android:id="@+id/tv_weight"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="20dp"
             android:layout_toEndOf="@id/tv_weight_tip"
-            android:layout_toRightOf="@id/tv_weight_tip"
             android:gravity="center"
             android:text="10.25 KG"
             android:textColor="@color/common_txt_color"
@@ -47,7 +46,6 @@
             android:layout_marginRight="20dp"
             android:layout_marginStart="20dp"
             android:layout_toEndOf="@id/tv_weight_tip"
-            android:layout_toRightOf="@id/tv_weight_tip"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -80,9 +78,12 @@
     <!--分割线-->
     <include layout="@layout/davide_horizontal_line" />
 
+    <!--菜单明细表头-->
+    <include layout="@layout/layout_menu_title" />
+
     <!--菜单明细-->
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_menu"
+    <com.cy.cyrvadapter.recyclerview.VerticalRecyclerView
+        android:id="@+id/vrv_menu"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
@@ -91,65 +92,12 @@
     <include layout="@layout/davide_horizontal_line" />
 
     <!--底部设置按钮-->
-    <RelativeLayout
-        android:id="@+id/rl_bottom_root"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginTop="3dp">
+    <include layout="@layout/layout_left_setting" />
 
-        <!--底部设置按钮:置零 -->
-        <RelativeLayout
-            android:id="@+id/rl_zero_root"
-            android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:layout_marginLeft="100dp"
-            android:layout_marginStart="100dp"
-            android:paddingLeft="7dp"
-            android:paddingRight="7dp">
+    <!--分割线-->
+    <include layout="@layout/davide_horizontal_line" />
 
-            <ImageView
-                android:id="@+id/iv_zero"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/ic_zero" />
+    <!--底部收银按钮-->
+    <include layout="@layout/layout_pay" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/iv_zero"
-                android:text="置零"
-                android:textSize="16sp" />
-
-        </RelativeLayout>
-
-
-        <!--底部设置按钮:去皮 -->
-        <RelativeLayout
-            android:id="@+id/rl_peel_root"
-            android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:layout_marginLeft="50dp"
-            android:layout_marginStart="50dp"
-            android:layout_toEndOf="@id/rl_zero_root"
-            android:layout_toRightOf="@id/rl_zero_root"
-            android:paddingLeft="7dp"
-            android:paddingRight="7dp">
-
-            <ImageView
-                android:id="@+id/iv_peel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/ic_peel" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/iv_peel"
-                android:text="置零"
-                android:textSize="16sp" />
-
-
-        </RelativeLayout>
-
-    </RelativeLayout>
 </LinearLayout>
