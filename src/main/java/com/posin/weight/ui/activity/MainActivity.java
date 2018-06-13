@@ -97,6 +97,7 @@ public class MainActivity extends BaseActivity {
     private List<MenuDetail> menuDetailList;
     private RVAdapter<MenuDetail> rvMenuAdapter;
     private RVAdapter.RVViewHolder menuDetailHolder;
+    private RVAdapter.RVViewHolder menuDetailHolder2;
 
     private List<String> foodTypeList;
     private RVAdapter<String> foodTypeAdapter;
@@ -119,21 +120,26 @@ public class MainActivity extends BaseActivity {
         initFoodDetail();
 
         rlItemDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (menuDetailHolder != null) {
-                    int position = menuDetailHolder.getLayoutPosition();
-                    Log.e(TAG, "position: " + position);
-                    menuDetailList.remove(position);
-                    rvMenuAdapter.setList_bean(menuDetailList);
-                    rvMenuAdapter.notifyDataSetChanged();
-                    menuDetailHolder=null;
+                    @Override
+                    public void onClick(View v) {
+                        if (menuDetailHolder != null) {
+                            int position = menuDetailHolder.getLayoutPosition();
+                            Log.e(TAG, "********************************************************");
+                            Log.e(TAG, "position: " + position);
+                            Log.e(TAG, "********************************************************\n");
+                            menuDetailList.remove(position);
+                            rvMenuAdapter.setList_bean(menuDetailList);
+                            if (position-1>=0) {
+                                rvMenuAdapter.setSelectedPosition(position - 1);
+                            }
+                            rvMenuAdapter.notifyDataSetChanged();
+                            menuDetailHolder = null;
+                        }
+                    }
                 }
-            }
-    }
 
-    );
-}
+        );
+    }
 
 
     public void changeFoodDetail(String name, double prices, int size) {
@@ -177,7 +183,17 @@ public class MainActivity extends BaseActivity {
             public void onItemClick(int position, Food bean) {
                 menuDetailList.add(new MenuDetail(bean.getName(), 1.25, bean.getPrices(), 9.86));
                 rvMenuAdapter.setList_bean(menuDetailList);
+                rvMenuAdapter.setSelectedPosition(menuDetailList.size() - 1);
                 rvMenuAdapter.notifyDataSetChanged();
+
+                vrvMenu.smoothScrollToPosition(menuDetailList.size() - 1);
+//                vrvMenu.scrollToPosition(menuDetailList.size()-1);
+//                vrvMenu.getLayoutManager().scrollToPosition(menuDetailList.size()-1);
+//                vrvMenu.setSelected(true);
+//                rvMenuAdapter.bindDataToView(menuDetailHolder2, menuDetailList.size() - 1,
+//                        menuDetailList.get(menuDetailList.size()-1), true);
+
+
             }
         };
         grvFoodDetail.setAdapter(foodsDetailAdapter, 3, false, false);
@@ -243,6 +259,12 @@ public class MainActivity extends BaseActivity {
                 holder.setText(R.id.tv_menu_prices, "￥" + bean.getPrices());
                 holder.setText(R.id.tv_menu_subtotal, "￥" + bean.getSubtotal());
 
+                Log.e(TAG, "=============================================");
+                Log.e(TAG, "isSelected: " + isSelected);
+                Log.e(TAG, "position: " + position);
+                Log.e(TAG, "=============================================\n");
+
+                menuDetailHolder2 = holder;
                 if (isSelected) {
                     menuDetailHolder = holder;
 //                    holder.getView(R.id.rl_menu_item).setBackgroundColor(Color.parseColor("#E6E6E6"));
