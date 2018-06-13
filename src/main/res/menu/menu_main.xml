@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.posin.printer.ui.activity.MainActivity">
+
+    <item android:id="@+id/serial_setting"
+        android:title="串口设置"
+        android:orderInCategory="90"
+        android:icon="@mipmap/serial_port"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/system_exit"
+        android:title="退出应用"
+        android:icon="@mipmap/ic_exit"
+        android:orderInCategory="90"
+        app:showAsAction="never"/>
+</menu>

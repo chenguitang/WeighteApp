@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.posin.weight.ui.activity.MainActivity">
+
+    <!--顶部title-->
+    <include
+        layout="@layout/common_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/common_toolbar"
+        android:orientation="horizontal">
+
+        <!--左边内容-->
+        <include layout="@layout/left_layout" />
+
+        <!--分割线-->
+        <include layout="@layout/davide_vertical_line" />
+
+        <!--右边内容-->
+        <include layout="@layout/right_menu_layout"/>
+        <!--<RelativeLayout-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_weight="5">-->
+
+        <!--</RelativeLayout>-->
+    </LinearLayout>
+
+
+</RelativeLayout>

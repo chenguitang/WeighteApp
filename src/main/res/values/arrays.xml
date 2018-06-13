@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--自定义显示商品View属性,名字和单价-->
+    <declare-styleable name="FoodCardView">
+        <attr name="name" format="string" />
+        <attr name="price" format="string" />
+    </declare-styleable>
+</resources>
