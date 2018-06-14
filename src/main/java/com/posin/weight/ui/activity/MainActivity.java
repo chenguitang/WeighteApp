@@ -1,6 +1,5 @@
 package com.posin.weight.ui.activity;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.DividerItemDecoration;
@@ -15,7 +14,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cy.cyrvadapter.adapter.RVAdapter;
 import com.cy.cyrvadapter.recyclerview.GridRecyclerView;
@@ -24,6 +22,11 @@ import com.posin.weight.R;
 import com.posin.weight.base.BaseActivity;
 import com.posin.weight.been.Food;
 import com.posin.weight.been.MenuDetail;
+import com.posin.weight.db.FoodTypeData;
+import com.posin.weight.db.FoodTypeDetailData;
+import com.posin.weight.ui.adapter.RvFoodTypeAdapter;
+import com.posin.weight.ui.adapter.RvFoodTypeDetailAdapter;
+import com.posin.weight.ui.adapter.RvMenuDetailAdapter;
 import com.posin.weight.view.FoodCardView;
 
 import java.lang.reflect.Method;
@@ -39,7 +42,7 @@ import butterknife.ButterKnife;
  * Time: 2018/5/23 20:06
  * Desc: 在线更新系统主界面
  */
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 
     private static final String TAG = "MainActivity";
@@ -94,18 +97,19 @@ public class MainActivity extends BaseActivity {
     RelativeLayout rlPayRoot;
 
 
+    //菜单列表
     private List<MenuDetail> menuDetailList;
-    private RVAdapter<MenuDetail> rvMenuAdapter;
-    private RVAdapter.RVViewHolder menuDetailHolder;
-    private RVAdapter.RVViewHolder menuDetailHolder2;
-
-    private List<String> foodTypeList;
-    private RVAdapter<String> foodTypeAdapter;
-
+    //菜品种类
+//    private List<String> foodTypeList;
+    //菜品种类下所有菜式
     private List<Food> foodList;
-    private RVAdapter<Food> foodsDetailAdapter;
+    //菜单列表适配器
+    private RvMenuDetailAdapter rvMenuDetailAdapter;
+    //菜品种类适配器
+    private RvFoodTypeAdapter rvFoodTypeAdapter;
+    //菜品种类所有菜式适配器
+    private RvFoodTypeDetailAdapter rvFoodTypeDetailAdapter;
 
-    RecyclerView recyclerView;
 
     @Override
     public int getLayoutId() {
@@ -118,126 +122,46 @@ public class MainActivity extends BaseActivity {
         initMenuDetail();
         initFoodType();
         initFoodDetail();
-
-        rlItemDelete.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (menuDetailHolder != null) {
-                            int position = menuDetailHolder.getLayoutPosition();
-                            Log.e(TAG, "********************************************************");
-                            Log.e(TAG, "position: " + position);
-                            Log.e(TAG, "********************************************************\n");
-                            menuDetailList.remove(position);
-                            rvMenuAdapter.setList_bean(menuDetailList);
-                            if (position-1>=0) {
-                                rvMenuAdapter.setSelectedPosition(position - 1);
-                            }
-                            rvMenuAdapter.notifyDataSetChanged();
-                            menuDetailHolder = null;
-                        }
-                    }
-                }
-
-        );
+        rlItemDelete.setOnClickListener(this);
     }
 
-
-    public void changeFoodDetail(String name, double prices, int size) {
-        foodList.clear();
-        for (int i = 0; i < size; i++) {
-            foodList.add(new Food(name + i, prices + i));
-        }
-        foodsDetailAdapter.setList_bean(foodList);
-        foodTypeAdapter.notifyDataSetChanged();
-    }
 
     /**
      * 菜品明细（某一个类型的菜品所有种类）
      */
     private void initFoodDetail() {
-        foodList = new ArrayList<>();
-        for (int i = 0; i < 32; i++) {
-            foodList.add(new Food("汉堡王" + i, 28.50 + i));
-        }
-
-        foodsDetailAdapter = new RVAdapter<Food>(foodList) {
+        foodList = FoodTypeDetailData.getFoodTypeetail("水果");
+        rvFoodTypeDetailAdapter = new RvFoodTypeDetailAdapter(foodList) {
             @Override
-            public void bindDataToView(RVViewHolder holder, int position, Food food, boolean isSelected) {
-                FoodCardView foodCardView = (FoodCardView) holder.itemView.findViewById(R.id.fc_food_detail);
-                foodCardView.setName(food.getName());
-                foodCardView.setPrice("￥" + food.getPrices());
-
-//                if (isSelected) {
-//                    holder.getView(R.id.fc_food_detail).setBackgroundColor(Color.parseColor("#00ae7d"));
-//                } else {
-//                    holder.getView(R.id.fc_food_detail).setBackgroundColor(Color.parseColor("#E6E6E6"));
-//                }
-            }
-
-            @Override
-            public int getItemLayoutID(int position, Food bean) {
-                return R.layout.item_food_detail;
-            }
-
-            @Override
-            public void onItemClick(int position, Food bean) {
-                menuDetailList.add(new MenuDetail(bean.getName(), 1.25, bean.getPrices(), 9.86));
-                rvMenuAdapter.setList_bean(menuDetailList);
-                rvMenuAdapter.setSelectedPosition(menuDetailList.size() - 1);
-                rvMenuAdapter.notifyDataSetChanged();
+            public void onTypeDetailItemClick(int position, Food food) {
+                menuDetailList.add(new MenuDetail(food.getName(), 1.25, food.getPrices(), 9.86));
+                rvMenuDetailAdapter.setList_bean(menuDetailList);
+                rvMenuDetailAdapter.setSelectedPosition(menuDetailList.size() - 1);
+                rvMenuDetailAdapter.notifyDataSetChanged();
 
                 vrvMenu.smoothScrollToPosition(menuDetailList.size() - 1);
-//                vrvMenu.scrollToPosition(menuDetailList.size()-1);
-//                vrvMenu.getLayoutManager().scrollToPosition(menuDetailList.size()-1);
-//                vrvMenu.setSelected(true);
-//                rvMenuAdapter.bindDataToView(menuDetailHolder2, menuDetailList.size() - 1,
-//                        menuDetailList.get(menuDetailList.size()-1), true);
-
-
             }
         };
-        grvFoodDetail.setAdapter(foodsDetailAdapter, 3, false, false);
+        grvFoodDetail.setAdapter(rvFoodTypeDetailAdapter, 3, false, false);
     }
 
     /**
      * 菜品种类使用方法
      */
     private void initFoodType() {
-        foodTypeList = new ArrayList<>();
-
-        foodTypeList.add("水果");
-        foodTypeList.add("水果1");
-        foodTypeList.add("水果2");
-        foodTypeList.add("水果3");
-        foodTypeList.add("水果4");
-        foodTypeList.add("水果5");
-        foodTypeList.add("汉堡");
-        foodTypeList.add("中餐");
-
-        foodTypeAdapter = new RVAdapter<String>(foodTypeList) {
+        rvFoodTypeAdapter = new RvFoodTypeAdapter(FoodTypeData.getFoodTypes()) {
             @Override
-            public void bindDataToView(RVViewHolder holder, int position, String name, boolean isSelected) {
-                holder.setText(R.id.tv_food_type_name, name);
+            public void onTypeItemClick(int position, String name) {
+                foodList.clear();
+                foodList = FoodTypeDetailData.getFoodTypeetail(name);
 
-                if (isSelected) {
-                    holder.getView(R.id.tv_food_type_name).setBackgroundColor(Color.parseColor("#00ae7d"));
-                } else {
-                    holder.getView(R.id.tv_food_type_name).setBackgroundColor(0x00000000);
-                }
-            }
-
-            @Override
-            public int getItemLayoutID(int position, String bean) {
-                return R.layout.item_food_type;
-            }
-
-            @Override
-            public void onItemClick(int position, String bean) {
-                changeFoodDetail(bean, 58.95, 22);
+                rvFoodTypeDetailAdapter.setList_bean(foodList);
+                rvFoodTypeDetailAdapter.notifyDataSetChanged();
             }
         };
+
         hrvFoodType.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL));
-        hrvFoodType.setAdapter(foodTypeAdapter);
+        hrvFoodType.setAdapter(rvFoodTypeAdapter);
     }
 
     /**
@@ -245,48 +169,35 @@ public class MainActivity extends BaseActivity {
      */
     private void initMenuDetail() {
         menuDetailList = new ArrayList<>();
-//        for (int i = 0; i < 20; i++) {
-//            menuDetailList.add(new MenuDetail(("黄焖鸡" + i), 1.25 + i, 79.5, (589.5 + i)));
-//        }
-
-        rvMenuAdapter = new RVAdapter<MenuDetail>(menuDetailList) {
-            @Override
-            public void bindDataToView(RVViewHolder holder, int position, MenuDetail bean, boolean isSelected) {
-
-
-                holder.setText(R.id.tv_menu_name, bean.getName());
-                holder.setText(R.id.tv_menu_weight, "x" + bean.getWeight());
-                holder.setText(R.id.tv_menu_prices, "￥" + bean.getPrices());
-                holder.setText(R.id.tv_menu_subtotal, "￥" + bean.getSubtotal());
-
-                Log.e(TAG, "=============================================");
-                Log.e(TAG, "isSelected: " + isSelected);
-                Log.e(TAG, "position: " + position);
-                Log.e(TAG, "=============================================\n");
-
-                menuDetailHolder2 = holder;
-                if (isSelected) {
-                    menuDetailHolder = holder;
-//                    holder.getView(R.id.rl_menu_item).setBackgroundColor(Color.parseColor("#E6E6E6"));
-                    holder.getView(R.id.rl_menu_item).setBackgroundColor(Color.parseColor("#CBC2A1"));
-                } else {
-                    holder.getView(R.id.rl_menu_item).setBackgroundColor(0x00000000);
-                }
-
-            }
-
-            @Override
-            public int getItemLayoutID(int position, MenuDetail bean) {
-                return R.layout.item_menu2;
-            }
-
-            @Override
-            public void onItemClick(int position, MenuDetail bean) {
-                Toast.makeText(mContext, "name: " + bean.getName(), Toast.LENGTH_SHORT).show();
-            }
-        };
+        rvMenuDetailAdapter = new RvMenuDetailAdapter(menuDetailList);
         vrvMenu.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        vrvMenu.setAdapter(rvMenuAdapter);
+        vrvMenu.setAdapter(rvMenuDetailAdapter);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.rl_item_delete:
+                int position = rvMenuDetailAdapter.getSelectedPosition();
+                Log.e(TAG, "********************************************************");
+                Log.e(TAG, "position: " + position);
+                Log.e(TAG, "********************************************************\n");
+                if (position >= 0) {
+                    menuDetailList.remove(position);
+                }
+                rvMenuDetailAdapter.setList_bean(menuDetailList);
+                if (position < rvMenuDetailAdapter.getItemCount()) {
+                    rvMenuDetailAdapter.setSelectedPosition(position);
+                } else if (position - 1 >= 0) {
+                    rvMenuDetailAdapter.setSelectedPosition(position - 1);
+                } else {
+                    rvMenuDetailAdapter.setSelectedPosition(-1);
+                }
+                rvMenuDetailAdapter.notifyDataSetChanged();
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -356,12 +267,5 @@ public class MainActivity extends BaseActivity {
             }
         }
         return super.onPreparePanel(featureId, view, menu);
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
     }
 }

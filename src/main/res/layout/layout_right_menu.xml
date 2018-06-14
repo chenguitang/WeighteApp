@@ -13,7 +13,7 @@
         android:layout_height="wrap_content" />
 
     <!--分割线-->
-    <include layout="@layout/davide_horizontal_line" />
+    <!--<include layout="@layout/davide_horizontal_line" />-->
 
     <!--种类明细-->
     <com.cy.cyrvadapter.recyclerview.GridRecyclerView
@@ -23,8 +23,8 @@
         android:paddingStart="5dp"
         android:paddingRight="5dp"
         android:paddingEnd="5dp"
-        android:background="#d0d1cc"
-        android:layout_height="wrap_content" />
+        android:background="#dcded8"
+        android:layout_height="match_parent" />
 
 
 </LinearLayout>
