@@ -14,19 +14,24 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cy.cyrvadapter.adapter.RVAdapter;
 import com.cy.cyrvadapter.recyclerview.GridRecyclerView;
 import com.cy.cyrvadapter.recyclerview.VerticalRecyclerView;
+import com.posin.device.SDK;
 import com.posin.weight.R;
 import com.posin.weight.base.BaseActivity;
 import com.posin.weight.been.Food;
 import com.posin.weight.been.MenuDetail;
 import com.posin.weight.db.FoodTypeData;
 import com.posin.weight.db.FoodTypeDetailData;
+import com.posin.weight.secondary.SecDisplayUtils;
 import com.posin.weight.ui.adapter.RvFoodTypeAdapter;
 import com.posin.weight.ui.adapter.RvFoodTypeDetailAdapter;
 import com.posin.weight.ui.adapter.RvMenuDetailAdapter;
+import com.posin.weight.utils.DoubleUtil;
+import com.posin.weight.utils.StringUtils;
 import com.posin.weight.view.FoodCardView;
 
 import java.lang.reflect.Method;
@@ -35,6 +40,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * FileName: MainActivity
@@ -42,7 +48,7 @@ import butterknife.ButterKnife;
  * Time: 2018/5/23 20:06
  * Desc: 在线更新系统主界面
  */
-public class MainActivity extends BaseActivity implements View.OnClickListener {
+public class MainActivity extends BaseActivity {
 
 
     private static final String TAG = "MainActivity";
@@ -73,8 +79,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     ImageView ivPeel;
     @BindView(R.id.rl_peel_root)
     RelativeLayout rlPeelRoot;
-    @BindView(R.id.rl_bottom_root)
-    RelativeLayout rlBottomRoot;
     @BindView(R.id.hrv_food_type)
     RecyclerView hrvFoodType;
     @BindView(R.id.grv_food_detail)
@@ -99,8 +103,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     //菜单列表
     private List<MenuDetail> menuDetailList;
-    //菜品种类
-//    private List<String> foodTypeList;
     //菜品种类下所有菜式
     private List<Food> foodList;
     //菜单列表适配器
@@ -111,6 +113,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private RvFoodTypeDetailAdapter rvFoodTypeDetailAdapter;
 
 
+    private double mSum;
+
     @Override
     public int getLayoutId() {
         return R.layout.activity_main;
@@ -119,10 +123,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     public void initData() {
 
+        try {
+            SDK.init(this);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         initMenuDetail();
         initFoodType();
         initFoodDetail();
-        rlItemDelete.setOnClickListener(this);
+//        rlItemDelete.setOnClickListener(this);
     }
 
 
@@ -134,12 +143,24 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         rvFoodTypeDetailAdapter = new RvFoodTypeDetailAdapter(foodList) {
             @Override
             public void onTypeDetailItemClick(int position, Food food) {
-                menuDetailList.add(new MenuDetail(food.getName(), 1.25, food.getPrices(), 9.86));
-                rvMenuDetailAdapter.setList_bean(menuDetailList);
-                rvMenuDetailAdapter.setSelectedPosition(menuDetailList.size() - 1);
-                rvMenuDetailAdapter.notifyDataSetChanged();
+                try {
+                    double prices = food.getPrices();
+                    SecDisplayUtils.getInstance().clear();
+                    mSum = DoubleUtil.add(mSum,food.getPrices());
+                    tvPay.setText(StringUtils.append("￥" + mSum));
 
-                vrvMenu.smoothScrollToPosition(menuDetailList.size() - 1);
+//                    SecDisplayUtils.getInstance().displayPrice(String.valueOf(prices));
+                    SecDisplayUtils.getInstance().displayWeight(String.valueOf(2.58));
+
+                    menuDetailList.add(new MenuDetail(food.getName(), 1.25, prices, 9.86));
+                    rvMenuDetailAdapter.setList_bean(menuDetailList);
+                    rvMenuDetailAdapter.setSelectedPosition(menuDetailList.size() - 1);
+                    rvMenuDetailAdapter.notifyDataSetChanged();
+
+                    vrvMenu.smoothScrollToPosition(menuDetailList.size() - 1);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         };
         grvFoodDetail.setAdapter(rvFoodTypeDetailAdapter, 3, false, false);
@@ -174,15 +195,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         vrvMenu.setAdapter(rvMenuDetailAdapter);
     }
 
-    @Override
+    @OnClick({R.id.rl_item_delete, R.id.rl_pay_root})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rl_item_delete:
                 int position = rvMenuDetailAdapter.getSelectedPosition();
-                Log.e(TAG, "********************************************************");
-                Log.e(TAG, "position: " + position);
-                Log.e(TAG, "********************************************************\n");
                 if (position >= 0) {
+                    mSum = DoubleUtil.sub(mSum, menuDetailList.get(position).getPrices());
+                    tvPay.setText(StringUtils.append("￥" + mSum));
                     menuDetailList.remove(position);
                 }
                 rvMenuDetailAdapter.setList_bean(menuDetailList);
@@ -194,6 +214,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     rvMenuDetailAdapter.setSelectedPosition(-1);
                 }
                 rvMenuDetailAdapter.notifyDataSetChanged();
+                break;
+            case R.id.rl_pay_root:
+                Toast.makeText(mContext, "支付", Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;

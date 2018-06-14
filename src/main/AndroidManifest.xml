@@ -9,7 +9,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name="com.posin.weight.ui.activity.MainActivity"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

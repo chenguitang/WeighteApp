@@ -9,8 +9,10 @@
     <RelativeLayout
         android:id="@+id/rl_zero_root"
         android:layout_width="wrap_content"
-        android:layout_height="60dp"
-        android:layout_marginStart="70dp"
+        android:layout_height="50dp"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/rl_peel_root"
+        android:gravity="center"
         android:paddingLeft="7dp"
         android:paddingRight="7dp">
 
@@ -34,10 +36,8 @@
     <RelativeLayout
         android:id="@+id/rl_peel_root"
         android:layout_width="wrap_content"
-        android:layout_height="60dp"
-        android:layout_marginStart="50dp"
-        android:layout_toEndOf="@id/rl_zero_root"
-        android:layout_toRightOf="@id/rl_zero_root"
+        android:layout_height="50dp"
+        android:layout_centerInParent="true"
         android:paddingLeft="7dp"
         android:paddingRight="7dp">
 
@@ -60,10 +60,10 @@
     <!--底部设置按钮:删除 -->
     <RelativeLayout
         android:id="@+id/rl_item_delete"
-        android:layout_width="wrap_content"
-        android:layout_height="60dp"
-        android:layout_marginStart="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         android:layout_toEndOf="@id/rl_peel_root"
+        android:gravity="center"
         android:paddingLeft="7dp"
         android:paddingRight="7dp">
 
