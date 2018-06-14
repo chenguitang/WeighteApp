@@ -167,11 +167,11 @@ public class MainActivity extends BaseActivity {
                 foodCardView.setName(food.getName());
                 foodCardView.setPrice("￥" + food.getPrices());
 
-                if (isSelected) {
-                    holder.getView(R.id.fc_food_detail).setBackgroundColor(Color.parseColor("#00ae7d"));
-                } else {
-                    holder.getView(R.id.fc_food_detail).setBackgroundColor(Color.parseColor("#E6E6E6"));
-                }
+//                if (isSelected) {
+//                    holder.getView(R.id.fc_food_detail).setBackgroundColor(Color.parseColor("#00ae7d"));
+//                } else {
+//                    holder.getView(R.id.fc_food_detail).setBackgroundColor(Color.parseColor("#E6E6E6"));
+//                }
             }
 
             @Override
@@ -245,9 +245,9 @@ public class MainActivity extends BaseActivity {
      */
     private void initMenuDetail() {
         menuDetailList = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            menuDetailList.add(new MenuDetail(("黄焖鸡" + i), 1.25 + i, 79.5, (589.5 + i)));
-        }
+//        for (int i = 0; i < 20; i++) {
+//            menuDetailList.add(new MenuDetail(("黄焖鸡" + i), 1.25 + i, 79.5, (589.5 + i)));
+//        }
 
         rvMenuAdapter = new RVAdapter<MenuDetail>(menuDetailList) {
             @Override

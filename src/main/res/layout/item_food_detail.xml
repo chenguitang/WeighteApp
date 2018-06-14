@@ -6,7 +6,7 @@
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp"
     android:layout_marginTop="10dp"
-    android:background="@color/light_white">
+    android:background="@drawable/selector_food_bg">
 
 
 </com.posin.weight.view.FoodCardView>
