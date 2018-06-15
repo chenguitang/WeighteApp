@@ -7,6 +7,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
+        android:name=".MyApplication"
         android:theme="@style/AppTheme">
         <activity android:name="com.posin.weight.ui.activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar.FullScreen">
@@ -16,6 +17,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".ui.activity.PayActivity"
+            android:theme="@style/Theme.AppCompat.Light.Dialog"/>
 
 
     </application>

@@ -1,11 +1,10 @@
 package com.posin.weight.ui.activity;
 
-import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,7 +15,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.cy.cyrvadapter.adapter.RVAdapter;
 import com.cy.cyrvadapter.recyclerview.GridRecyclerView;
 import com.cy.cyrvadapter.recyclerview.VerticalRecyclerView;
 import com.posin.device.SDK;
@@ -26,20 +24,20 @@ import com.posin.weight.been.Food;
 import com.posin.weight.been.MenuDetail;
 import com.posin.weight.db.FoodTypeData;
 import com.posin.weight.db.FoodTypeDetailData;
-import com.posin.weight.secondary.SecDisplayUtils;
+import com.posin.weight.module.secondary.SecDisplayUtils;
 import com.posin.weight.ui.adapter.RvFoodTypeAdapter;
 import com.posin.weight.ui.adapter.RvFoodTypeDetailAdapter;
 import com.posin.weight.ui.adapter.RvMenuDetailAdapter;
+import com.posin.weight.ui.contract.WeightContract;
+import com.posin.weight.ui.presenter.WeightPresenter;
 import com.posin.weight.utils.DoubleUtil;
 import com.posin.weight.utils.StringUtils;
-import com.posin.weight.view.FoodCardView;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
@@ -48,7 +46,7 @@ import butterknife.OnClick;
  * Time: 2018/5/23 20:06
  * Desc: 在线更新系统主界面
  */
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements WeightContract.IWeightView {
 
 
     private static final String TAG = "MainActivity";
@@ -112,6 +110,8 @@ public class MainActivity extends BaseActivity {
     //菜品种类所有菜式适配器
     private RvFoodTypeDetailAdapter rvFoodTypeDetailAdapter;
 
+    private WeightPresenter mWeightPresenter;
+    private Handler mHandler = new Handler();
 
     private double mSum;
 
@@ -119,6 +119,7 @@ public class MainActivity extends BaseActivity {
     public int getLayoutId() {
         return R.layout.activity_main;
     }
+
 
     @Override
     public void initData() {
@@ -128,12 +129,22 @@ public class MainActivity extends BaseActivity {
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
+
+        mWeightPresenter = new WeightPresenter(this, this, mHandler);
         initMenuDetail();
         initFoodType();
         initFoodDetail();
-//        rlItemDelete.setOnClickListener(this);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        try {
+            mWeightPresenter.bindService();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * 菜品明细（某一个类型的菜品所有种类）
@@ -144,23 +155,26 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onTypeDetailItemClick(int position, Food food) {
                 try {
-                    double prices = food.getPrices();
                     SecDisplayUtils.getInstance().clear();
-                    mSum = DoubleUtil.add(mSum,food.getPrices());
-                    tvPay.setText(StringUtils.append("￥" + mSum));
-
 //                    SecDisplayUtils.getInstance().displayPrice(String.valueOf(prices));
                     SecDisplayUtils.getInstance().displayWeight(String.valueOf(2.58));
-
-                    menuDetailList.add(new MenuDetail(food.getName(), 1.25, prices, 9.86));
-                    rvMenuDetailAdapter.setList_bean(menuDetailList);
-                    rvMenuDetailAdapter.setSelectedPosition(menuDetailList.size() - 1);
-                    rvMenuDetailAdapter.notifyDataSetChanged();
-
-                    vrvMenu.smoothScrollToPosition(menuDetailList.size() - 1);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
+                double prices = food.getPrices();
+                mSum = DoubleUtil.add(mSum, food.getPrices());
+                tvPay.setText(StringUtils.append("￥" + mSum));
+
+                //小计
+                double subtotal = DoubleUtil.round(DoubleUtil.mul(prices, 1.25), 2);
+                //增加菜品到菜单栏
+                menuDetailList.add(new MenuDetail(food.getName(), 1.25, prices, subtotal));
+                rvMenuDetailAdapter.setList_bean(menuDetailList);
+                rvMenuDetailAdapter.setSelectedPosition(menuDetailList.size() - 1);
+                rvMenuDetailAdapter.notifyDataSetChanged();
+
+                vrvMenu.smoothScrollToPosition(menuDetailList.size() - 1);
             }
         };
         grvFoodDetail.setAdapter(rvFoodTypeDetailAdapter, 3, false, false);
@@ -195,7 +209,7 @@ public class MainActivity extends BaseActivity {
         vrvMenu.setAdapter(rvMenuDetailAdapter);
     }
 
-    @OnClick({R.id.rl_item_delete, R.id.rl_pay_root})
+    @OnClick({R.id.rl_item_delete, R.id.rl_pay_root, R.id.rl_peel_root, R.id.rl_zero_root})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rl_item_delete:
@@ -217,6 +231,20 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.rl_pay_root:
                 Toast.makeText(mContext, "支付", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.rl_peel_root:
+                try {
+                    mWeightPresenter.rePeel();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            case R.id.rl_zero_root:
+                try {
+                    mWeightPresenter.setZero();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             default:
                 break;
@@ -290,5 +318,36 @@ public class MainActivity extends BaseActivity {
             }
         }
         return super.onPreparePanel(featureId, view, menu);
+    }
+
+    @Override
+    public void weightError(String errorMessage) {
+        tvWeight.setText(errorMessage);
+    }
+
+    @Override
+    public void updateWeight(String weight) {
+        tvWeight.setText(weight);
+    }
+
+    @Override
+    public void isStable(boolean stable) {
+        rbStable.setChecked(stable);
+    }
+
+    @Override
+    public void isPeel(boolean Peel) {
+        rbPeel.setChecked(Peel);
+    }
+
+    @Override
+    public void isZero(boolean Zero) {
+        rbZero.setChecked(Zero);
+    }
+
+    @Override
+    public void showError(Throwable throwable) {
+        Toast.makeText(mContext, "Error: " + throwable.getMessage(),
+                Toast.LENGTH_SHORT).show();
     }
 }
