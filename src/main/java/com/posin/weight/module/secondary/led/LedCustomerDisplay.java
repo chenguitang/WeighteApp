@@ -107,6 +107,7 @@ public class LedCustomerDisplay {
      * @throws IOException
      */
     public void displayWeight(String value) throws IOException {
+        mSerialPort.getOutputStream().write(0x0C);
         value += "\r";
         mSerialPort.getOutputStream().write(value.getBytes());
     }

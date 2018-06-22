@@ -139,7 +139,7 @@ public class WeightPresenter implements WeightContract.IWeightPresenter {
             mWeight = WeightUtils.getWeight(iWeight);
 
             //重量
-            mWeightView.updateWeight(String.format("%.3f KG", mWeight.getNetWeight() / 1000.0f));
+            mWeightView.updateWeight(mWeight.getNetWeight());
 
             //是否稳定
             mWeightView.isStable(mWeight.getSteadyMark() > 0);

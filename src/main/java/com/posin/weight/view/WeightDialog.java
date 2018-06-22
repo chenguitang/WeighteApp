@@ -38,34 +38,18 @@ import static android.content.ContentValues.TAG;
  */
 public class WeightDialog extends BaseDialog {
 
-    @BindView(R.id.rl_get_weight_root)
-    RelativeLayout rlGetWeightRoot;
     @BindView(R.id.tv_weight_food_name)
     TextView tvWeightFoodName;
-    @BindView(R.id.tv_line_one)
-    TextView tvLineOne;
     @BindView(R.id.btn_weight_ok)
     Button btnWeightOk;
     @BindView(R.id.btn_weight_cancel)
     Button btnWeightCancel;
-    @BindView(R.id.rl_weight_inter_root)
-    RelativeLayout rlWeightInterRoot;
-    @BindView(R.id.tv_line_two)
-    TextView tvLineTwo;
     @BindView(R.id.tv_get_weight_princes)
     TextView tvGetWeightPrinces;
-    @BindView(R.id.tv_get_weight_price_tip)
-    TextView tvGetWeightPriceTip;
     @BindView(R.id.tv_get_weight_weight)
     TextView tvGetWeightWeight;
-    @BindView(R.id.tv_get_weight_weight_tip)
-    TextView tvGetWeightWeightTip;
     @BindView(R.id.tv_get_weight_money)
     TextView tvGetWeightMoney;
-    @BindView(R.id.tv_get_weight_money_tip)
-    TextView tvGetWeightMoneyTip;
-    @BindView(R.id.ll_weight_message_root)
-    LinearLayout llWeightMessageRoot;
 
     private static final String TAG = "WeightDialog";
     /**
@@ -106,10 +90,6 @@ public class WeightDialog extends BaseDialog {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
-                    Log.e(TAG, "weight: " + mWeight);
-                    Log.e(TAG, "mSubtotal: " + mSubtotal);
-
                     tvGetWeightWeight.setText(StringUtils.append(mWeight, "KG"));
                     tvGetWeightMoney.setText(StringUtils.append(mSubtotal, " 元"));
                     Message message = new Message();
@@ -153,7 +133,7 @@ public class WeightDialog extends BaseDialog {
 
 
         //获取实时重量值，并更新重量
-        mHandler.sendEmptyMessage(CODE_GET_AND_UPDATE_WEIGHT);
+        // mHandler.sendEmptyMessage(CODE_GET_AND_UPDATE_WEIGHT);
     }
 
 
@@ -172,6 +152,23 @@ public class WeightDialog extends BaseDialog {
                 break;
         }
     }
+
+    /**
+     * 更新重量值
+     *
+     * @param weight float
+     */
+    public void updateWeight(float weight) {
+        if (isShowing()) {
+            mWeight = weight;
+            mSubtotal = DoubleUtil.round(mWeight * mPrices, 2);
+            tvGetWeightWeight.setText(String.format("%.3f KG", mWeight));
+            tvGetWeightMoney.setText(StringUtils.append(mSubtotal, " 元"));
+            Message message = new Message();
+            message.what = CODE_GET_AND_UPDATE_WEIGHT;
+        }
+    }
+
 
     /**
      * 获取重量dialog弹框接口方法

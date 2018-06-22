@@ -40,6 +40,7 @@ import com.posin.weight.ui.contract.WeightContract;
 import com.posin.weight.ui.presenter.WeightPresenter;
 import com.posin.weight.utils.DoubleUtil;
 import com.posin.weight.utils.StringUtils;
+import com.posin.weight.utils.ThreadManage;
 import com.posin.weight.view.WeightDialog;
 
 import java.lang.reflect.Method;
@@ -58,13 +59,8 @@ import butterknife.OnClick;
 public class MainActivity extends BaseActivity implements WeightContract.IWeightView,
         WeightDialog.WeightDialogView {
 
-
-    private static final String TAG = "MainActivity";
-
     @BindView(R.id.common_toolbar)
     Toolbar commonToolbar;
-    @BindView(R.id.tv_weight_tip)
-    TextView tvWeightTip;
     @BindView(R.id.tv_weight)
     TextView tvWeight;
     @BindView(R.id.rb_stable)
@@ -73,8 +69,6 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
     RadioButton rbZero;
     @BindView(R.id.rb_peel)
     RadioButton rbPeel;
-    @BindView(R.id.ll_rb_root)
-    LinearLayout llRbRoot;
     @BindView(R.id.rl_weight_root)
     RelativeLayout rlWeightRoot;
     @BindView(R.id.vrv_menu)
@@ -91,24 +85,18 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
     RecyclerView hrvFoodType;
     @BindView(R.id.grv_food_detail)
     GridRecyclerView grvFoodDetail;
-    @BindView(R.id.activity_main)
-    RelativeLayout activityMain;
-    @BindView(R.id.tv_subtotal_title)
-    TextView tvSubtotalTitle;
-    @BindView(R.id.tv_prices_title)
-    TextView tvPricesTitle;
-    @BindView(R.id.iv_item_delete)
-    ImageView ivItemDelete;
     @BindView(R.id.rl_item_delete)
     RelativeLayout rlItemDelete;
-    @BindView(R.id.tv_pay_tip)
-    TextView tvPayTip;
     @BindView(R.id.tv_pay)
     TextView tvPay;
-    @BindView(R.id.rl_pay_root)
-    RelativeLayout rlPayRoot;
 
+    private static final String TAG = "MainActivity";
 
+    /**
+     * 客显显示非重量值时，显示时长
+     * 单位：毫秒
+     */
+    private static final int SECONDARY_DISPLAY_SHOW_NOT_WEIGHT_TIME = 4000;
     //菜单列表
     private List<MenuDetail> menuDetailList;
     //菜品种类下所有菜式
@@ -123,6 +111,12 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
     private WeightPresenter mWeightPresenter;
     private WeightDialog mWeightDialog;
     private Handler mHandler = new Handler();
+
+
+    /**
+     * 客显是否需要显示非重量值
+     */
+    private boolean is_sec_show_others = false;
 
     private double mSum;
 
@@ -231,6 +225,9 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
             case R.id.rl_pay_root:
                 try {
                     PrinterUtils.getInstance().printMenuDetail(menuDetailList, mSum, 512.5, 58, 32);
+                    updateSecShowOtherState(true,0);
+                    SecDisplayUtils.getInstance().displayTotal(String.valueOf(mSum));
+                    updateSecShowOtherState(false,SECONDARY_DISPLAY_SHOW_NOT_WEIGHT_TIME);
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
                     Toast.makeText(mContext, "出错了：" + throwable.getMessage(), Toast.LENGTH_SHORT).show();
@@ -329,8 +326,25 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
     }
 
     @Override
-    public void updateWeight(String weight) {
-        tvWeight.setText(weight);
+    public void updateWeight(float weight) {
+        //修改显示重量
+        float weightFloat = weight / 1000.0f;
+        tvWeight.setText(String.format("%.3f KG", weightFloat));
+
+        //如果有dialog弹框，同步dialog中显示的重量
+        if (mWeightDialog != null) {
+            mWeightDialog.updateWeight(weightFloat);
+        }
+
+        //客显显示实时重量
+        try {
+            if (!is_sec_show_others) {  //不显示其他数据时，动态显示重量
+                SecDisplayUtils.getInstance().displayWeight(String.format("%.3f", weightFloat));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -377,8 +391,10 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
 
         //控制客显显示内容
         try {
-//                    SecDisplayUtils.getInstance().displayPrice(String.valueOf(prices));
-            SecDisplayUtils.getInstance().displayWeight(String.valueOf(menuDetail.getWeight()));
+            updateSecShowOtherState(true,0);
+            SecDisplayUtils.getInstance().displayPrice(String.valueOf(menuDetail.getPrices()));
+            updateSecShowOtherState(false,SECONDARY_DISPLAY_SHOW_NOT_WEIGHT_TIME);
+//            SecDisplayUtils.getInstance().displayWeight(String.valueOf(menuDetail.getWeight()));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -395,7 +411,24 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
         rvMenuDetailAdapter.notifyDataSetChanged();
 
         vrvMenu.smoothScrollToPosition(menuDetailList.size() - 1);
+    }
 
 
+    /**
+     * 更新判断客显显示非重量值的判断标识
+     * @param is_others boolean
+     */
+    private void updateSecShowOtherState(final boolean is_others, final int time) {
+        ThreadManage.getSinglePool().execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(time);
+                    is_sec_show_others = is_others;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }

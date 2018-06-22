@@ -23,9 +23,9 @@ public interface WeightContract {
         /**
          * 显示秤重量
          *
-         * @param weight String
+         * @param weight float
          */
-        void updateWeight(String weight);
+        void updateWeight(float weight);
 
         /**
          * 是否稳定
