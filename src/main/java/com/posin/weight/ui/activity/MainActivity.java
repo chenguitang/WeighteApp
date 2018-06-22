@@ -1,14 +1,21 @@
 package com.posin.weight.ui.activity;
 
+import android.content.Intent;
 import android.os.Handler;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -24,6 +31,7 @@ import com.posin.weight.been.Food;
 import com.posin.weight.been.MenuDetail;
 import com.posin.weight.db.FoodTypeData;
 import com.posin.weight.db.FoodTypeDetailData;
+import com.posin.weight.module.printer.PrinterUtils;
 import com.posin.weight.module.secondary.SecDisplayUtils;
 import com.posin.weight.ui.adapter.RvFoodTypeAdapter;
 import com.posin.weight.ui.adapter.RvFoodTypeDetailAdapter;
@@ -32,6 +40,7 @@ import com.posin.weight.ui.contract.WeightContract;
 import com.posin.weight.ui.presenter.WeightPresenter;
 import com.posin.weight.utils.DoubleUtil;
 import com.posin.weight.utils.StringUtils;
+import com.posin.weight.view.WeightDialog;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -46,7 +55,8 @@ import butterknife.OnClick;
  * Time: 2018/5/23 20:06
  * Desc: 在线更新系统主界面
  */
-public class MainActivity extends BaseActivity implements WeightContract.IWeightView {
+public class MainActivity extends BaseActivity implements WeightContract.IWeightView,
+        WeightDialog.WeightDialogView {
 
 
     private static final String TAG = "MainActivity";
@@ -63,8 +73,8 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
     RadioButton rbZero;
     @BindView(R.id.rb_peel)
     RadioButton rbPeel;
-    @BindView(R.id.rg_root)
-    RadioGroup rgRoot;
+    @BindView(R.id.ll_rb_root)
+    LinearLayout llRbRoot;
     @BindView(R.id.rl_weight_root)
     RelativeLayout rlWeightRoot;
     @BindView(R.id.vrv_menu)
@@ -111,6 +121,7 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
     private RvFoodTypeDetailAdapter rvFoodTypeDetailAdapter;
 
     private WeightPresenter mWeightPresenter;
+    private WeightDialog mWeightDialog;
     private Handler mHandler = new Handler();
 
     private double mSum;
@@ -154,27 +165,14 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
         rvFoodTypeDetailAdapter = new RvFoodTypeDetailAdapter(foodList) {
             @Override
             public void onTypeDetailItemClick(int position, Food food) {
-                try {
-                    SecDisplayUtils.getInstance().clear();
-//                    SecDisplayUtils.getInstance().displayPrice(String.valueOf(prices));
-                    SecDisplayUtils.getInstance().displayWeight(String.valueOf(2.58));
-                } catch (Exception e) {
-                    e.printStackTrace();
+
+                if (mWeightDialog == null) {
+                    mWeightDialog = new WeightDialog(MainActivity.this, food.getName(), food.getPrices(),
+                            mWeightPresenter, MainActivity.this);
+                    mWeightDialog.show();
+                } else {
+                    Log.e(TAG, "mWeightDialog !=null ,Please close the Dialog that is being displayed");
                 }
-
-                double prices = food.getPrices();
-                mSum = DoubleUtil.add(mSum, food.getPrices());
-                tvPay.setText(StringUtils.append("￥" + mSum));
-
-                //小计
-                double subtotal = DoubleUtil.round(DoubleUtil.mul(prices, 1.25), 2);
-                //增加菜品到菜单栏
-                menuDetailList.add(new MenuDetail(food.getName(), 1.25, prices, subtotal));
-                rvMenuDetailAdapter.setList_bean(menuDetailList);
-                rvMenuDetailAdapter.setSelectedPosition(menuDetailList.size() - 1);
-                rvMenuDetailAdapter.notifyDataSetChanged();
-
-                vrvMenu.smoothScrollToPosition(menuDetailList.size() - 1);
             }
         };
         grvFoodDetail.setAdapter(rvFoodTypeDetailAdapter, 3, false, false);
@@ -195,6 +193,7 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
             }
         };
 
+        rvFoodTypeAdapter.setSelectedPosition(0);
         hrvFoodType.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL));
         hrvFoodType.setAdapter(rvFoodTypeAdapter);
     }
@@ -230,7 +229,12 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
                 rvMenuDetailAdapter.notifyDataSetChanged();
                 break;
             case R.id.rl_pay_root:
-                Toast.makeText(mContext, "支付", Toast.LENGTH_SHORT).show();
+                try {
+                    PrinterUtils.getInstance().printMenuDetail(menuDetailList, mSum, 512.5, 58, 32);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                    Toast.makeText(mContext, "出错了：" + throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.rl_peel_root:
                 try {
@@ -280,8 +284,7 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
         int itemId = item.getItemId();
         switch (itemId) {
             case R.id.serial_setting:
-
-
+                Toast.makeText(mContext, "串口设置正在开发中 ....", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.system_exit:
                 MainActivity.this.finish();
@@ -349,5 +352,50 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
     public void showError(Throwable throwable) {
         Toast.makeText(mContext, "Error: " + throwable.getMessage(),
                 Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void getWeightCancel() {
+        if (mWeightDialog != null) {
+            if (mWeightDialog.isShowing()) {
+                mWeightDialog.dismiss();
+            }
+            mWeightDialog = null;
+        }
+    }
+
+    @Override
+    public void getWeightOk(MenuDetail menuDetail) {
+
+        //隐藏Dialog弹框
+        if (mWeightDialog != null) {
+            if (mWeightDialog.isShowing()) {
+                mWeightDialog.dismiss();
+            }
+            mWeightDialog = null;
+        }
+
+        //控制客显显示内容
+        try {
+//                    SecDisplayUtils.getInstance().displayPrice(String.valueOf(prices));
+            SecDisplayUtils.getInstance().displayWeight(String.valueOf(menuDetail.getWeight()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Log.e(TAG, menuDetail.getName() + "小计: " + menuDetail.getSubtotal());
+        //修改总金额
+        mSum = DoubleUtil.add(mSum, menuDetail.getSubtotal());
+        tvPay.setText(StringUtils.append("￥" + mSum));
+
+        //增加菜品到菜单栏
+        menuDetailList.add(menuDetail);
+        rvMenuDetailAdapter.setList_bean(menuDetailList);
+        rvMenuDetailAdapter.setSelectedPosition(menuDetailList.size() - 1);
+        rvMenuDetailAdapter.notifyDataSetChanged();
+
+        vrvMenu.smoothScrollToPosition(menuDetailList.size() - 1);
+
+
     }
 }

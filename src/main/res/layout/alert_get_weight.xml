@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+
+   <RelativeLayout
+       android:id="@+id/rl_get_weight_root"
+       android:layout_width="match_parent"
+       android:background="#222333"
+       android:layout_height="50dp">
+      
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_marginStart="20dp"
+          android:text="称重商品"
+          android:textColor="@color/white"
+          android:textSize="22sp"
+          android:layout_alignParentStart="true"
+          android:gravity="center_vertical"
+          android:layout_height="match_parent" />
+
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_marginStart="20dp"
+          android:text="妃子笑荔枝"
+          android:textColor="@color/white"
+          android:layout_alignParentEnd="true"
+          android:layout_marginEnd="20dp"
+          android:visibility="gone"
+          android:textSize="22sp"
+          android:gravity="center_vertical"
+          android:layout_height="match_parent" />
+
+   </RelativeLayout>
+
+   <TextView
+       android:id="@+id/tv_weight_food_name"
+       android:text="妃子笑荔枝"
+       android:layout_below="@+id/rl_get_weight_root"
+       android:layout_width="match_parent"
+       android:paddingStart="30dp"
+       android:gravity="center_vertical"
+       android:paddingEnd="5dp"
+       android:textColor="@color/light_black"
+       android:textSize="20sp"
+       android:layout_height="50dp" />
+
+   <TextView
+       android:id="@+id/tv_line_one"
+       android:layout_below="@+id/tv_weight_food_name"
+       android:layout_width="match_parent"
+       android:background="@color/common_divider_wide"
+       android:layout_height="@dimen/divide_line_height_size" />
+
+   <RelativeLayout
+       android:id="@+id/rl_weight_inter_root"
+       android:layout_alignParentBottom="true"
+       android:layout_width="match_parent"
+       android:paddingBottom="10dp"
+       android:layout_height="wrap_content">
+
+      <Button
+          android:id="@+id/btn_weight_ok"
+          android:layout_width="wrap_content"
+          android:background="#5588CC"
+          android:text="确认"
+          android:textColor="@color/white"
+          android:textSize="18sp"
+          android:layout_alignParentEnd="true"
+          android:paddingLeft="15dp"
+          android:paddingRight="15dp"
+          android:layout_marginEnd="20dp"
+          android:layout_height="45dp" />
+
+      <Button
+          android:id="@+id/btn_weight_cancel"
+          android:layout_width="wrap_content"
+          android:background="#5588CC"
+          android:text="取消"
+          android:textColor="@color/white"
+          android:textSize="18sp"
+          android:layout_toStartOf="@id/btn_weight_ok"
+          android:paddingLeft="15dp"
+          android:layout_marginEnd="20dp"
+          android:paddingRight="15dp"
+          android:layout_height="45dp" />
+
+   </RelativeLayout>
+
+   <TextView
+       android:id="@+id/tv_line_two"
+       android:layout_above="@+id/rl_weight_inter_root"
+       android:layout_width="match_parent"
+       android:background="@color/common_divider_wide"
+       android:layout_marginBottom="10dp"
+       android:layout_height="@dimen/divide_line_height_size" />
+
+   <LinearLayout
+       android:id="@+id/ll_weight_message_root"
+       android:layout_width="match_parent"
+       android:layout_below="@id/tv_line_one"
+       android:layout_above="@id/tv_line_two"
+       android:gravity="center"
+       android:layout_height="wrap_content">
+
+      <RelativeLayout
+          android:layout_weight="1"
+          android:layout_width="0dp"
+          android:layout_height="100dp">
+
+         <TextView
+             android:id="@+id/tv_get_weight_princes"
+             android:layout_width="wrap_content"
+             android:textSize="18sp"
+             android:textColor="@color/light_black"
+             android:textStyle="bold"
+             android:layout_centerInParent="true"
+             android:layout_height="wrap_content" />
+
+         <TextView
+             android:id="@+id/tv_get_weight_price_tip"
+             android:layout_width="wrap_content"
+             android:layout_above="@+id/tv_get_weight_princes"
+             android:layout_centerHorizontal="true"
+             android:text="单价(元)"
+             android:textSize="18sp"
+             android:layout_height="wrap_content" />
+
+
+
+      </RelativeLayout>
+
+      <include layout="@layout/davide_vertical_line"
+          android:layout_height="100dp"
+          android:layout_width="@dimen/divide_line_height_size"/>
+
+      <RelativeLayout
+          android:layout_weight="1"
+          android:layout_width="0dp"
+          android:layout_height="match_parent">
+
+         <TextView
+             android:id="@+id/tv_get_weight_weight"
+             android:layout_width="wrap_content"
+             android:textSize="18sp"
+             android:textColor="@color/light_black"
+             android:textStyle="bold"
+             android:layout_centerInParent="true"
+             android:layout_height="wrap_content" />
+
+         <TextView
+             android:id="@+id/tv_get_weight_weight_tip"
+             android:layout_width="wrap_content"
+             android:layout_above="@+id/tv_get_weight_weight"
+             android:layout_centerHorizontal="true"
+             android:text="重量(kg)"
+             android:textSize="18sp"
+             android:layout_height="wrap_content" />
+      </RelativeLayout>
+
+      <include layout="@layout/davide_vertical_line"
+          android:layout_height="100dp"
+          android:layout_width="@dimen/divide_line_height_size"/>
+
+      <RelativeLayout
+          android:layout_weight="1"
+          android:layout_width="0dp"
+          android:layout_height="match_parent">
+
+         <TextView
+             android:id="@+id/tv_get_weight_money"
+             android:layout_width="wrap_content"
+             android:textSize="18sp"
+             android:textColor="@color/light_black"
+             android:textStyle="bold"
+             android:layout_centerInParent="true"
+             android:layout_height="wrap_content" />
+
+         <TextView
+             android:id="@+id/tv_get_weight_money_tip"
+             android:layout_width="wrap_content"
+             android:layout_above="@+id/tv_get_weight_money"
+             android:layout_centerHorizontal="true"
+             android:text="金额(元)"
+             android:textSize="18sp"
+             android:layout_height="wrap_content" />
+      </RelativeLayout>
+
+   </LinearLayout>
+
+
+</RelativeLayout>

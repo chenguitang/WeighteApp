@@ -13,7 +13,7 @@ public class PayActivity extends BaseActivity {
 
     @Override
     public int getLayoutId() {
-        return R.layout.layout_pay;
+        return R.layout.alert_get_weight;
     }
 
     @Override

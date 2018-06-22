@@ -123,6 +123,7 @@ public class WeightPresenter implements WeightContract.IWeightPresenter {
         if (iWeight == null) {
             throw new Exception("IScaleService services is null, please bindService");
         }
+        iWeight.setTare();
     }
 
     private void doUpdateWeight() throws Exception {

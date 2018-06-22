@@ -39,5 +39,5 @@ dependencies {
     /*RecyclerViewAdapter*/
     compile project(':cyrvadapter')
     compile files('libs/posindev.jar')
-    compile files('libs/framework-android44.jar')
+    provided files('libs/framework-android44.jar')
 }

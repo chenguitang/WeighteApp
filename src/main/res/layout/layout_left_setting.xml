@@ -12,23 +12,29 @@
         android:layout_height="50dp"
         android:layout_alignParentStart="true"
         android:layout_toStartOf="@+id/rl_peel_root"
-        android:gravity="center"
-        android:paddingLeft="7dp"
-        android:paddingRight="7dp">
+        android:gravity="center">
 
-        <ImageView
-            android:id="@+id/iv_zero"
+        <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/ic_zero" />
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingLeft="7dp"
+            android:paddingRight="7dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/iv_zero"
-            android:text="置零"
-            android:textSize="16sp" />
+            <ImageView
+                android:id="@+id/iv_zero"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_zero" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/iv_zero"
+                android:text="置零"
+                android:textSize="16sp" />
+
+        </RelativeLayout>
     </RelativeLayout>
 
 

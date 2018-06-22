@@ -120,7 +120,9 @@ public class SecDisplayUtils implements ICustomerDisplay {
         if (isLcd()) {
             mLcdCustomerDisplay.displayWeight(value);
         } else {
-            mLedCustomerDisplay.displayPrice(value);
+//            mLedCustomerDisplay.displayPrice(value);
+//            mLedCustomerDisplay.displayValue(value,0x0C);
+            mLedCustomerDisplay.displayWeight(value);
         }
     }
 
