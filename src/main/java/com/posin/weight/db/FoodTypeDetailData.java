@@ -53,7 +53,7 @@ public class FoodTypeDetailData {
                 foodList.add(new Food("芝士牛肉堡", 30));
                 foodList.add(new Food("培根鸡蛋堡", 24));
                 foodList.add(new Food("鳕鱼堡", 12));
-                foodList.add(new Food("足尊牛堡", 88));
+                foodList.add(new Food("至尊牛肉堡", 88));
                 foodList.add(new Food("麦香猪柳堡", 46));
                 foodList.add(new Food("双层吉士堡", 64.5));
                 break;

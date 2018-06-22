@@ -13,11 +13,13 @@ import java.util.List;
  * Time: 2018/6/14 13:06
  * Desc: TODO
  */
-public abstract class RvFoodTypeAdapter extends RVAdapter<String> {
+public class RvFoodTypeAdapter extends RVAdapter<String> {
 
+    private RvFoodTypeView mRvFoodTypeView;
 
-    public RvFoodTypeAdapter(List<String> list_bean) {
+    public RvFoodTypeAdapter(List<String> list_bean, RvFoodTypeView rvFoodTypeView) {
         super(list_bean);
+        this.mRvFoodTypeView = rvFoodTypeView;
     }
 
     @Override
@@ -37,8 +39,11 @@ public abstract class RvFoodTypeAdapter extends RVAdapter<String> {
 
     @Override
     public void onItemClick(int position, String bean) {
-        onTypeItemClick(position,bean);
+        mRvFoodTypeView.onTypeItemClick(position, bean);
     }
 
-    public abstract void onTypeItemClick(int position,String name);
+
+    public interface RvFoodTypeView {
+        void onTypeItemClick(int position, String name);
+    }
 }

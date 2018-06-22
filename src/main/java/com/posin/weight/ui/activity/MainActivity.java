@@ -41,6 +41,7 @@ import com.posin.weight.ui.presenter.WeightPresenter;
 import com.posin.weight.utils.DoubleUtil;
 import com.posin.weight.utils.StringUtils;
 import com.posin.weight.utils.ThreadManage;
+import com.posin.weight.view.PayDialog;
 import com.posin.weight.view.WeightDialog;
 
 import java.lang.reflect.Method;
@@ -57,7 +58,7 @@ import butterknife.OnClick;
  * Desc: 在线更新系统主界面
  */
 public class MainActivity extends BaseActivity implements WeightContract.IWeightView,
-        WeightDialog.WeightDialogView {
+        WeightDialog.WeightDialogView, RvFoodTypeDetailAdapter.RvFoodTypeDetailView, RvFoodTypeAdapter.RvFoodTypeView {
 
     @BindView(R.id.common_toolbar)
     Toolbar commonToolbar;
@@ -108,6 +109,9 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
     //菜品种类所有菜式适配器
     private RvFoodTypeDetailAdapter rvFoodTypeDetailAdapter;
 
+    private int flowNumber = 666;
+    private int oddNumber = 87154;
+
     private WeightPresenter mWeightPresenter;
     private WeightDialog mWeightDialog;
     private Handler mHandler = new Handler();
@@ -156,19 +160,7 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
      */
     private void initFoodDetail() {
         foodList = FoodTypeDetailData.getFoodTypeetail("水果");
-        rvFoodTypeDetailAdapter = new RvFoodTypeDetailAdapter(foodList) {
-            @Override
-            public void onTypeDetailItemClick(int position, Food food) {
-
-                if (mWeightDialog == null) {
-                    mWeightDialog = new WeightDialog(MainActivity.this, food.getName(), food.getPrices(),
-                            mWeightPresenter, MainActivity.this);
-                    mWeightDialog.show();
-                } else {
-                    Log.e(TAG, "mWeightDialog !=null ,Please close the Dialog that is being displayed");
-                }
-            }
-        };
+        rvFoodTypeDetailAdapter = new RvFoodTypeDetailAdapter(foodList, this);
         grvFoodDetail.setAdapter(rvFoodTypeDetailAdapter, 3, false, false);
     }
 
@@ -176,16 +168,7 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
      * 菜品种类使用方法
      */
     private void initFoodType() {
-        rvFoodTypeAdapter = new RvFoodTypeAdapter(FoodTypeData.getFoodTypes()) {
-            @Override
-            public void onTypeItemClick(int position, String name) {
-                foodList.clear();
-                foodList = FoodTypeDetailData.getFoodTypeetail(name);
-
-                rvFoodTypeDetailAdapter.setList_bean(foodList);
-                rvFoodTypeDetailAdapter.notifyDataSetChanged();
-            }
-        };
+        rvFoodTypeAdapter = new RvFoodTypeAdapter(FoodTypeData.getFoodTypes(), this);
 
         rvFoodTypeAdapter.setSelectedPosition(0);
         hrvFoodType.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL));
@@ -202,13 +185,41 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
         vrvMenu.setAdapter(rvMenuDetailAdapter);
     }
 
+
+    /**
+     * 点击选择具体某个商品
+     */
+    @Override
+    public void onTypeDetailItemClick(int position, Food food) {
+        if (mWeightDialog == null) {
+            mWeightDialog = new WeightDialog(MainActivity.this, food.getName(), food.getPrices(),
+                    mWeightPresenter, MainActivity.this);
+            mWeightDialog.show();
+        } else {
+            Log.e(TAG, "mWeightDialog !=null ,Please close the Dialog that is being displayed");
+        }
+    }
+
+    /**
+     * 选择某个商品分类
+     */
+    @Override
+    public void onTypeItemClick(int position, String name) {
+        foodList.clear();
+        foodList = FoodTypeDetailData.getFoodTypeetail(name);
+
+        rvFoodTypeDetailAdapter.setList_bean(foodList);
+        rvFoodTypeDetailAdapter.notifyDataSetChanged();
+    }
+
+
     @OnClick({R.id.rl_item_delete, R.id.rl_pay_root, R.id.rl_peel_root, R.id.rl_zero_root})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rl_item_delete:
                 int position = rvMenuDetailAdapter.getSelectedPosition();
                 if (position >= 0) {
-                    mSum = DoubleUtil.sub(mSum, menuDetailList.get(position).getPrices());
+                    mSum = DoubleUtil.sub(mSum, menuDetailList.get(position).getSubtotal());
                     tvPay.setText(StringUtils.append("￥" + mSum));
                     menuDetailList.remove(position);
                 }
@@ -224,10 +235,22 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
                 break;
             case R.id.rl_pay_root:
                 try {
-                    PrinterUtils.getInstance().printMenuDetail(menuDetailList, mSum, 512.5, 58, 32);
-                    updateSecShowOtherState(true,0);
-                    SecDisplayUtils.getInstance().displayTotal(String.valueOf(mSum));
-                    updateSecShowOtherState(false,SECONDARY_DISPLAY_SHOW_NOT_WEIGHT_TIME);
+//                    PrinterUtils.getInstance().printMenuDetail(menuDetailList, mSum,
+//                            512.5457, 58.25, 32.487, flowNumber, StringUtils.append("20154641654", oddNumber));
+//                    updateSecShowOtherState(true, 0);
+//                    SecDisplayUtils.getInstance().displayTotal(String.valueOf(mSum));
+//                    updateSecShowOtherState(false, SECONDARY_DISPLAY_SHOW_NOT_WEIGHT_TIME);
+//
+//                    menuDetailList.clear();
+//                    rvMenuDetailAdapter.setList_bean(menuDetailList);
+//                    rvMenuDetailAdapter.notifyDataSetChanged();
+//
+//                    oddNumber++;
+//                    flowNumber++;
+
+                    PayDialog payDialog = new PayDialog(this);
+                    payDialog.show();
+
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
                     Toast.makeText(mContext, "出错了：" + throwable.getMessage(), Toast.LENGTH_SHORT).show();
@@ -391,15 +414,15 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
 
         //控制客显显示内容
         try {
-            updateSecShowOtherState(true,0);
+            updateSecShowOtherState(true, 0);
             SecDisplayUtils.getInstance().displayPrice(String.valueOf(menuDetail.getPrices()));
-            updateSecShowOtherState(false,SECONDARY_DISPLAY_SHOW_NOT_WEIGHT_TIME);
+            updateSecShowOtherState(false, SECONDARY_DISPLAY_SHOW_NOT_WEIGHT_TIME);
 //            SecDisplayUtils.getInstance().displayWeight(String.valueOf(menuDetail.getWeight()));
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        Log.e(TAG, menuDetail.getName() + "小计: " + menuDetail.getSubtotal());
+        Log.d(TAG, menuDetail.getName() + "  小计: " + menuDetail.getSubtotal());
         //修改总金额
         mSum = DoubleUtil.add(mSum, menuDetail.getSubtotal());
         tvPay.setText(StringUtils.append("￥" + mSum));
@@ -416,6 +439,7 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
 
     /**
      * 更新判断客显显示非重量值的判断标识
+     *
      * @param is_others boolean
      */
     private void updateSecShowOtherState(final boolean is_others, final int time) {
@@ -431,4 +455,5 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
             }
         });
     }
+
 }

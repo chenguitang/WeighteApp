@@ -144,7 +144,7 @@ public class WeightDialog extends BaseDialog {
                 mWeightDialogView.getWeightCancel();
                 break;
             case R.id.btn_weight_ok:
-                MenuDetail menuDetail = new MenuDetail(mFoodName, DoubleUtil.round(mWeight, 3),
+                MenuDetail menuDetail = new MenuDetail(mFoodName, DoubleUtil.round(mWeight, 2),
                         mPrices, mSubtotal);
                 mWeightDialogView.getWeightOk(menuDetail);
                 break;

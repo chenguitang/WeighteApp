@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rl_get_weight_root"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#222333">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="20dp"
+            android:gravity="center_vertical"
+            android:text="支付"
+            android:textColor="@color/white"
+            android:textSize="22sp" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_weight_message_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl_get_weight_root"
+        android:layout_marginTop="20dp">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="70dp"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/tv_get_weight_princes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textColor="@color/light_black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_get_weight_price_tip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/tv_get_weight_princes"
+                android:layout_centerHorizontal="true"
+                android:text="总金额(元)"
+                android:textSize="18sp" />
+
+
+        </RelativeLayout>
+
+        <include
+            layout="@layout/davide_vertical_line"
+            android:layout_width="@dimen/divide_line_height_size"
+            android:layout_height="50dp" />
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/tv_get_weight_weight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textColor="@color/light_black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_get_weight_weight_tip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/tv_get_weight_weight"
+                android:layout_centerHorizontal="true"
+                android:text="实收金额(元)"
+                android:textSize="18sp" />
+        </RelativeLayout>
+
+        <include
+            layout="@layout/davide_vertical_line"
+            android:layout_width="@dimen/divide_line_height_size"
+            android:layout_height="50dp" />
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/tv_get_weight_money"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textColor="@color/light_black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_get_weight_money_tip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/tv_get_weight_money"
+                android:layout_centerHorizontal="true"
+                android:text="找零金额(元)"
+                android:textSize="18sp" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_line_one"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divide_line_height_size"
+        android:layout_above="@+id/ll_weight_message_root"
+        android:layout_below="@+id/rl_get_weight_root"
+        android:layout_marginTop="20dp"
+        android:background="@color/common_divider_wide" />
+
+    <RelativeLayout
+        android:id="@+id/rl_weight_inter_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:paddingBottom="10dp">
+
+        <Button
+            android:id="@+id/btn_weight_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="20dp"
+            android:background="#5588CC"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:text="确认"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/btn_weight_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_marginEnd="20dp"
+            android:layout_toStartOf="@id/btn_weight_ok"
+            android:background="#5588CC"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:text="取消"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_line_two"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divide_line_height_size"
+        android:layout_below="@id/ll_weight_message_root"
+        android:layout_marginBottom="10dp"
+        android:background="@color/common_divider_wide" />
+
+    <TextView
+        android:id="@+id/tv_line_three"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divide_line_height_size"
+        android:layout_marginBottom="10dp"
+        android:layout_above="@id/rl_weight_inter_root"
+        android:background="@color/common_divider_wide" />
+
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_below="@id/tv_line_two"
+        android:background="#dcded8"
+        android:layout_above="@id/tv_line_three"
+        android:layout_height="match_parent">
+
+        <TableRow
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_width="match_parent">
+
+            <TextView
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:text="1"
+                android:textSize="26sp"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:layout_height="match_parent"
+                android:background="@color/light_black"
+                android:layout_width="1dp"/>
+
+            <TextView
+                android:layout_height="match_parent"
+               
+                android:text="2"
+                android:textSize="26sp"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:layout_width="0dp"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:layout_height="match_parent"
+                android:background="@color/light_black"
+                android:layout_width="1dp"/>
+            <TextView
+                android:layout_height="match_parent"
+               
+                android:text="3"
+                android:textSize="26sp"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:layout_width="0dp"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:layout_height="match_parent"
+                android:background="@color/light_black"
+                android:layout_width="1dp"/>
+
+            <TextView
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:text="0"
+                android:textSize="26sp"
+                android:gravity="center"
+                android:textColor="@color/white"
+               
+                android:layout_weight="1"/>
+
+        </TableRow>
+
+        <TextView
+            android:layout_height="1dp"
+            android:background="@color/light_black"
+            android:layout_width="match_parent"/>
+
+        <TableRow
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_width="match_parent">
+
+            <TextView
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+               
+                android:text="4"
+                android:textSize="26sp"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:layout_height="match_parent"
+                android:background="@color/light_black"
+                android:layout_width="1dp"/>
+
+            <TextView
+                android:layout_height="match_parent"
+               
+                android:text="5"
+                android:textSize="26sp"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:layout_width="0dp"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:layout_height="match_parent"
+                android:background="@color/light_black"
+                android:layout_width="1dp"/>
+            <TextView
+                android:layout_height="match_parent"
+               
+                android:text="6"
+                android:textSize="26sp"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:layout_width="0dp"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:layout_height="match_parent"
+                android:background="@color/light_black"
+                android:layout_width="1dp"/>
+
+            <TextView
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:text="."
+                android:textSize="26sp"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+               
+                android:layout_weight="1"/>
+
+        </TableRow>
+        <TextView
+            android:layout_height="1dp"
+            android:background="@color/light_black"
+            android:layout_width="match_parent"/>
+
+        <TableRow
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_width="match_parent">
+
+
+            <TextView
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+               
+                android:text="7"
+                android:textSize="26sp"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:layout_height="match_parent"
+                android:background="@color/light_black"
+                android:layout_width="1dp"/>
+
+            <TextView
+                android:layout_height="match_parent"
+               
+                android:layout_width="0dp"
+                android:text="8"
+                android:textSize="26sp"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:layout_height="match_parent"
+                android:background="@color/light_black"
+                android:layout_width="1dp"/>
+            <TextView
+                android:layout_height="match_parent"
+               
+                android:layout_width="0dp"
+                android:text="9"
+                android:textSize="26sp"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:layout_height="match_parent"
+                android:background="@color/light_black"
+                android:layout_width="1dp"/>
+
+            <TextView
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+               
+                android:text="C"
+                android:textSize="26sp"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:layout_weight="1"/>
+
+        </TableRow>
+        <TextView
+            android:layout_height="1dp"
+            android:background="@color/light_black"
+            android:layout_width="match_parent"/>
+
+    </TableLayout>
+
+
+</RelativeLayout>
