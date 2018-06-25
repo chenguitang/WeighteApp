@@ -2,11 +2,13 @@ package com.posin.weight.ui.activity;
 
 import android.content.Intent;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -44,9 +46,12 @@ import com.posin.weight.utils.ThreadManage;
 import com.posin.weight.view.PayDialog;
 import com.posin.weight.view.WeightDialog;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -58,7 +63,7 @@ import butterknife.OnClick;
  * Desc: 在线更新系统主界面
  */
 public class MainActivity extends BaseActivity implements WeightContract.IWeightView,
-        WeightDialog.WeightDialogView, RvFoodTypeDetailAdapter.RvFoodTypeDetailView, RvFoodTypeAdapter.RvFoodTypeView {
+        WeightDialog.WeightDialogView, RvFoodTypeDetailAdapter.RvFoodTypeDetailView, RvFoodTypeAdapter.RvFoodTypeView, PayDialog.IPayView {
 
     @BindView(R.id.common_toolbar)
     Toolbar commonToolbar;
@@ -97,7 +102,7 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
      * 客显显示非重量值时，显示时长
      * 单位：毫秒
      */
-    private static final int SECONDARY_DISPLAY_SHOW_NOT_WEIGHT_TIME = 4000;
+    private static final int SECONDARY_DISPLAY_SHOW_NOT_WEIGHT_TIME = 3650;
     //菜单列表
     private List<MenuDetail> menuDetailList;
     //菜品种类下所有菜式
@@ -114,13 +119,11 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
 
     private WeightPresenter mWeightPresenter;
     private WeightDialog mWeightDialog;
+    private PayDialog mPayDialog;
     private Handler mHandler = new Handler();
+    //客显显示非重量值的时间值
+    private long mSecShowOthersTime;
 
-
-    /**
-     * 客显是否需要显示非重量值
-     */
-    private boolean is_sec_show_others = false;
 
     private double mSum;
 
@@ -138,7 +141,6 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
-
         mWeightPresenter = new WeightPresenter(this, this, mHandler);
         initMenuDetail();
         initFoodType();
@@ -234,22 +236,21 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
                 rvMenuDetailAdapter.notifyDataSetChanged();
                 break;
             case R.id.rl_pay_root:
-                try {
-//                    PrinterUtils.getInstance().printMenuDetail(menuDetailList, mSum,
-//                            512.5457, 58.25, 32.487, flowNumber, StringUtils.append("20154641654", oddNumber));
-//                    updateSecShowOtherState(true, 0);
-//                    SecDisplayUtils.getInstance().displayTotal(String.valueOf(mSum));
-//                    updateSecShowOtherState(false, SECONDARY_DISPLAY_SHOW_NOT_WEIGHT_TIME);
-//
-//                    menuDetailList.clear();
-//                    rvMenuDetailAdapter.setList_bean(menuDetailList);
-//                    rvMenuDetailAdapter.notifyDataSetChanged();
-//
-//                    oddNumber++;
-//                    flowNumber++;
 
-                    PayDialog payDialog = new PayDialog(this);
-                    payDialog.show();
+                //菜单中没有数据，点击支付不显示内容
+                if (menuDetailList.size() <= 0) {
+                    return;
+                }
+
+                try {
+                    SecDisplayUtils.getInstance().displayTotal(String.valueOf(mSum));
+
+                    if (mPayDialog == null) {
+                        mPayDialog = new PayDialog(this, mSum, this);
+                        mPayDialog.show();
+                    } else {
+                        Log.e(TAG, "PayDialog !=null,please close pay dialog");
+                    }
 
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
@@ -358,11 +359,16 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
         if (mWeightDialog != null) {
             mWeightDialog.updateWeight(weightFloat);
         }
-
         //客显显示实时重量
         try {
-            if (!is_sec_show_others) {  //不显示其他数据时，动态显示重量
-                SecDisplayUtils.getInstance().displayWeight(String.format("%.3f", weightFloat));
+            if (System.currentTimeMillis() - mSecShowOthersTime >=
+                    SECONDARY_DISPLAY_SHOW_NOT_WEIGHT_TIME) {  //不显示其他数据时，动态显示重量
+
+//                Log.e(TAG, System.currentTimeMillis() + " - " + mSecShowOthersTime + " = " +
+//                        (System.currentTimeMillis() - mSecShowOthersTime));
+
+                String secFormatWight = String.format("%.3f", weightFloat);
+                SecDisplayUtils.getInstance().displayWeight(secFormatWight);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -412,17 +418,17 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
             mWeightDialog = null;
         }
 
+        //显示单价，更新客显显示非重量的时间
+        mSecShowOthersTime = System.currentTimeMillis();
+
         //控制客显显示内容
         try {
-            updateSecShowOtherState(true, 0);
             SecDisplayUtils.getInstance().displayPrice(String.valueOf(menuDetail.getPrices()));
-            updateSecShowOtherState(false, SECONDARY_DISPLAY_SHOW_NOT_WEIGHT_TIME);
 //            SecDisplayUtils.getInstance().displayWeight(String.valueOf(menuDetail.getWeight()));
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        Log.d(TAG, menuDetail.getName() + "  小计: " + menuDetail.getSubtotal());
         //修改总金额
         mSum = DoubleUtil.add(mSum, menuDetail.getSubtotal());
         tvPay.setText(StringUtils.append("￥" + mSum));
@@ -437,23 +443,82 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
     }
 
 
-    /**
-     * 更新判断客显显示非重量值的判断标识
-     *
-     * @param is_others boolean
-     */
-    private void updateSecShowOtherState(final boolean is_others, final int time) {
-        ThreadManage.getSinglePool().execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(time);
-                    is_sec_show_others = is_others;
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+    @Override
+    public void payCancel() {
+        if (mPayDialog != null) {
+            if (mPayDialog.isShowing()) {
+                mPayDialog.dismiss();
             }
-        });
+            mPayDialog = null;
+        }
     }
+
+    @Override
+    public void paySuccess(double payUp, double changeMoney) {
+        if (mPayDialog != null) {
+            if (mPayDialog.isShowing()) {
+                mPayDialog.dismiss();
+            }
+            mPayDialog = null;
+        }
+
+        tvPay.setText("￥0.0");
+
+        try {
+            PrinterUtils.getInstance().printMenuDetail(menuDetailList, mSum,
+                    payUp, changeMoney, 0.0, flowNumber, StringUtils.append("20154641654", oddNumber));
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+
+        mSum = 0;
+        menuDetailList.clear();
+        rvMenuDetailAdapter.setList_bean(menuDetailList);
+        rvMenuDetailAdapter.notifyDataSetChanged();
+
+        oddNumber++;
+        flowNumber++;
+        Toast.makeText(mContext, "支付成功 ",
+                Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void displayTotal(String value) {
+        try {
+            SecDisplayUtils.getInstance().displayTotal(value);
+            //显示总计，更新客显显示非重量的时间
+            mSecShowOthersTime = System.currentTimeMillis();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void displayPayment(String value) {
+        try {
+            if (TextUtils.isEmpty(value)) {
+                SecDisplayUtils.getInstance().displayPayment("0.0");
+            } else {
+                SecDisplayUtils.getInstance().displayPayment(value);
+            }
+
+            //显示支付，更新客显显示非重量的时间
+            mSecShowOthersTime = System.currentTimeMillis();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void displayChange(String value) {
+        try {
+            SecDisplayUtils.getInstance().displayChange(value);
+            //显示找零，更新客显显示非重量的时间
+            mSecShowOthersTime = System.currentTimeMillis();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }

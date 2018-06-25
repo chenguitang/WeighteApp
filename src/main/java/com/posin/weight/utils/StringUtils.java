@@ -1,5 +1,7 @@
 package com.posin.weight.utils;
 
+import java.text.DecimalFormat;
+
 /**
  * FileName: StringUtils
  * Author: Greetty
@@ -14,12 +16,31 @@ public class StringUtils {
      * @param message 字符串
      * @return 拼接后字符串
      */
-    public static String append(Object ... message) {
+    public static String append(Object... message) {
         StringBuilder sb = new StringBuilder();
         for (Object obj : message) {
             sb.append(obj);
         }
         return sb.toString();
+    }
+
+    /**
+     * 格式化Double字符
+     * @param value double
+     * @param scale int 保留几位数
+     * @return String
+     */
+    public static String decimalFormat(double value, int scale) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("#");
+        if (scale > 0) {
+            sb.append(".");
+        }
+        for (int i = 0; i < scale; i++) {
+            sb.append("0");
+        }
+        DecimalFormat df = new DecimalFormat(sb.toString());
+        return df.format(value);
     }
 
 

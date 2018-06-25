@@ -1,15 +1,11 @@
 package com.posin.weight.module.printer;
 
-import android.util.Log;
-
 import com.posin.device.Printer;
 import com.posin.weight.been.MenuDetail;
 import com.posin.weight.utils.StringUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * FileName: PrinterUtils
@@ -65,8 +61,6 @@ public class PrinterUtils {
 
         mPrinter.print(" 名称      单价    数量     小计\n".getBytes("gbk"));
 
-        Log.e(TAG, "menuDetailList size: " + menuDetailList.size());
-
         for (MenuDetail menuDetail : menuDetailList) {
             String foodName = menuDetail.getName();
             double foodPrices = menuDetail.getPrices();
@@ -77,20 +71,21 @@ public class PrinterUtils {
                     foodWeight, spaceSize(12 - String.valueOf(foodWeight).length() -
                             String.valueOf(subtotalMoney).length()),
                     subtotalMoney, "\n");
-            Log.e(TAG, "menuLineData: " + menuLineData);
             mPrinter.print(menuLineData.getBytes("gbk"));
         }
         mPrinter.print("--------------------------------\n");
 
+        String alreadyPayStr = StringUtils.decimalFormat(alreadyPay, 2);
+        String changeMoneyStr = StringUtils.decimalFormat(changeMoney, 2);
+        changeMoneyStr = changeMoneyStr.indexOf(".") == 0 ? "0.00" : changeMoneyStr;
+
         mPrinter.print(StringUtils.append("应收：", sumMoney,
                 spaceSize(20 - String.valueOf(sumMoney).length() -
-                        String.valueOf(alreadyPay).length()),
-                "实收：", alreadyPay, "\n").getBytes("gbk"));
+                        alreadyPayStr.length()), "实收：", alreadyPayStr, "\n").getBytes("gbk"));
 
-        mPrinter.print(StringUtils.append("找零：", changeMoney,
+        mPrinter.print(StringUtils.append("找零：", changeMoneyStr,
                 spaceSize(20 - String.valueOf(changeMoney).length() -
-                        String.valueOf(discountMoney).length()),
-                "优惠：", discountMoney, "\n").getBytes("gbk"));
+                        changeMoneyStr.length()), "优惠：", "0.00", "\n").getBytes("gbk"));
 
         mPrinter.print("--------------------------------\n");
         mPrinter.print("操作员：李小明\n".getBytes("gbk"));
