@@ -1,7 +1,11 @@
 package com.posin.weight.module.secondary;
 
+import android.text.TextUtils;
+
+import com.posin.weight.MyApplication;
 import com.posin.weight.module.secondary.lcd.LcdCustomerDisplay;
 import com.posin.weight.module.secondary.led.LedCustomerDisplay;
+import com.posin.weight.utils.LanguageUtils;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -40,9 +44,9 @@ public class SecDisplayUtils implements ICustomerDisplay {
     private SecDisplayUtils() {
         try {
             loadSystemProperties();
-
             if (isLcd()) {
-                mLcdCustomerDisplay = new LcdCustomerDisplay();
+                mLcdCustomerDisplay = new LcdCustomerDisplay(LanguageUtils.isZh(
+                        MyApplication.getContext()));
             } else {
                 mLedCustomerDisplay = new LedCustomerDisplay(mLedPort);
             }
@@ -80,9 +84,23 @@ public class SecDisplayUtils implements ICustomerDisplay {
     }
 
     @Override
-    public void displayPrice(String value) throws IOException {
+    public void displayPrice(String name, String value, String weight,
+                             String subtotal) throws IOException {
         if (isLcd()) {
+            mLcdCustomerDisplay.clear();
+
+            mLcdCustomerDisplay.setCursorPos(0, 0);
+            mLcdCustomerDisplay.displayName(name);
+
+            mLcdCustomerDisplay.setCursorPos(1, 0);
             mLcdCustomerDisplay.displayPrice(value);
+
+            mLcdCustomerDisplay.setCursorPos(2, 0);
+            mLcdCustomerDisplay.displayWeight(weight);
+
+            mLcdCustomerDisplay.setCursorPos(3, 0);
+            mLcdCustomerDisplay.displaySubtotal(subtotal);
+
         } else {
             mLedCustomerDisplay.displayPrice(value);
         }
@@ -91,6 +109,8 @@ public class SecDisplayUtils implements ICustomerDisplay {
     @Override
     public void displayTotal(String value) throws IOException {
         if (isLcd()) {
+            mLcdCustomerDisplay.clear();
+            mLcdCustomerDisplay.setCursorPos(1, 0);
             mLcdCustomerDisplay.displayTotal(value);
         } else {
             mLedCustomerDisplay.displayTotal(value);
@@ -100,6 +120,8 @@ public class SecDisplayUtils implements ICustomerDisplay {
     @Override
     public void displayPayment(String value) throws IOException {
         if (isLcd()) {
+            mLcdCustomerDisplay.clear();
+            mLcdCustomerDisplay.setCursorPos(1, 0);
             mLcdCustomerDisplay.displayPayment(value);
         } else {
             mLedCustomerDisplay.displayPayment(value);
@@ -109,6 +131,8 @@ public class SecDisplayUtils implements ICustomerDisplay {
     @Override
     public void displayChange(String value) throws IOException {
         if (isLcd()) {
+            mLcdCustomerDisplay.clear();
+            mLcdCustomerDisplay.setCursorPos(1, 0);
             mLcdCustomerDisplay.displayChange(value);
         } else {
             mLedCustomerDisplay.displayChange(value);
@@ -118,11 +142,51 @@ public class SecDisplayUtils implements ICustomerDisplay {
     @Override
     public void displayWeight(String value) throws Exception {
         if (isLcd()) {
+            mLcdCustomerDisplay.clear();
+            mLcdCustomerDisplay.setCursorPos(1, 0);
             mLcdCustomerDisplay.displayWeight(value);
         } else {
-//            mLedCustomerDisplay.displayPrice(value);
-//            mLedCustomerDisplay.displayValue(value,0x0C);
             mLedCustomerDisplay.displayWeight(value);
+        }
+    }
+
+    public void displayWightUnClear(String value) throws Exception {
+        if (isLcd()) {
+            mLcdCustomerDisplay.setCursorPos(1, 0);
+            mLcdCustomerDisplay.displayWeight(value);
+        }
+    }
+
+    /**
+     * 显示收银明细
+     *
+     * @param sumMoney    总金额
+     * @param payUp       支付金额
+     * @param changeMoney 找零金额
+     * @param discount    优惠金额
+     */
+    public void displayPayMessage(String sumMoney, String payUp, String changeMoney,
+                                  String discount) throws Exception {
+        if (isLcd()) {
+            mLcdCustomerDisplay.clear();
+
+            mLcdCustomerDisplay.setCursorPos(0, 0);
+            mLcdCustomerDisplay.displayTotal(TextUtils.isEmpty(sumMoney) ? "0.0" : sumMoney);
+
+            mLcdCustomerDisplay.setCursorPos(1, 0);
+            mLcdCustomerDisplay.displayPayment(TextUtils.isEmpty(payUp) ? "0.0" : payUp);
+
+            mLcdCustomerDisplay.setCursorPos(2, 0);
+            if (TextUtils.isEmpty(changeMoney)) {
+                mLcdCustomerDisplay.displayChange("0.0");
+            } else {
+                changeMoney = changeMoney.indexOf(".") == 0 ? "0.0" : changeMoney;
+                mLcdCustomerDisplay.displayChange(changeMoney);
+            }
+
+            mLcdCustomerDisplay.setCursorPos(3, 0);
+            mLcdCustomerDisplay.displayDiscount(TextUtils.isEmpty(discount) ? "0.0" : discount);
+
         }
     }
 
@@ -131,7 +195,7 @@ public class SecDisplayUtils implements ICustomerDisplay {
      *
      * @return boolean
      */
-    private boolean isLcd() {
+    public boolean isLcd() {
         return mCustomerDspType.equals("lcd");
     }
 

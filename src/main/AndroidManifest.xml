@@ -18,10 +18,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.activity.PayActivity"
-            android:theme="@style/Theme.AppCompat.Light.Dialog"/>
-
-
     </application>
 
 </manifest>

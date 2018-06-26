@@ -16,17 +16,19 @@ import java.util.List;
 public class RvFoodTypeDetailAdapter extends RVAdapter<Food> {
 
     private RvFoodTypeDetailView mRvFoodTypeDetailView;
+    private boolean mIsZh;
 
-    public RvFoodTypeDetailAdapter(List<Food> list_bean, RvFoodTypeDetailView rvFoodTypeDetailView) {
+    public RvFoodTypeDetailAdapter(List<Food> list_bean, RvFoodTypeDetailView rvFoodTypeDetailView, boolean iszh) {
         super(list_bean);
         this.mRvFoodTypeDetailView = rvFoodTypeDetailView;
+        this.mIsZh = iszh;
     }
 
     @Override
     public void bindDataToView(RVViewHolder holder, int position, Food food, boolean isSelected) {
         FoodCardView foodCardView = (FoodCardView) holder.itemView.findViewById(R.id.fc_food_detail);
         foodCardView.setName(food.getName());
-        foodCardView.setPrice("￥" + food.getPrices());
+        foodCardView.setPrice(mIsZh ? "￥" + food.getPrices() : "$" + food.getPrices());
 
     }
 

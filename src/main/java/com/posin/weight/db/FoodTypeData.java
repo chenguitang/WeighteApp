@@ -18,15 +18,23 @@ public class FoodTypeData {
      *
      * @return List<String>
      */
-    public static List<String> getFoodTypes() {
+    public static List<String> getFoodTypes(boolean is_zh) {
         List<String> foodTypeList = new ArrayList<>();
-        foodTypeList.add("水果");
-        foodTypeList.add("前菜");
-        foodTypeList.add("汉堡");
-        foodTypeList.add("烤物");
-        foodTypeList.add("刺身");
-        foodTypeList.add("主食");
-
+        if (is_zh) {
+            foodTypeList.add("水果");
+            foodTypeList.add("前菜");
+            foodTypeList.add("汉堡");
+            foodTypeList.add("烤物");
+            foodTypeList.add("刺身");
+            foodTypeList.add("主食");
+        }else{
+            foodTypeList.add("Fruits");
+            foodTypeList.add("FormerDish");
+            foodTypeList.add("Hamburger");
+            foodTypeList.add("Roast");
+            foodTypeList.add("Sashimi");
+            foodTypeList.add("StapleFood");
+        }
         return foodTypeList;
     }
 

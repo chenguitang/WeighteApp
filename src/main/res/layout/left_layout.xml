@@ -20,7 +20,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
             android:layout_marginStart="20dp"
-            android:text="重量: "
+            android:text="@string/top_weight_tip"
             android:textColor="@color/common_txt_color"
             android:textSize="32sp" />
 
@@ -31,7 +31,7 @@
             android:layout_marginTop="20dp"
             android:layout_toEndOf="@id/tv_weight_tip"
             android:gravity="center"
-            android:text="10.25 KG"
+            android:text="0.00 KG"
             android:textColor="@color/common_txt_color"
             android:textSize="32sp" />
 
@@ -54,21 +54,21 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="稳定" />
+                android:text="@string/weight_status_stable" />
 
             <RadioButton
                 android:id="@+id/rb_zero"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="零位" />
+                android:text="@string/weight_status_zero" />
 
             <RadioButton
                 android:id="@+id/rb_peel"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="去皮" />
+                android:text="@string/weight_status_tare" />
 
         </LinearLayout>
 

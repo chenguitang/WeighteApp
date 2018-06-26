@@ -24,6 +24,7 @@
             <ImageView
                 android:id="@+id/iv_zero"
                 android:layout_width="wrap_content"
+                android:layout_centerHorizontal="true"
                 android:layout_height="wrap_content"
                 android:src="@mipmap/ic_zero" />
 
@@ -31,7 +32,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/iv_zero"
-                android:text="置零"
+                android:layout_centerHorizontal="true"
+                android:text="@string/set_zero"
                 android:textSize="16sp" />
 
         </RelativeLayout>
@@ -50,14 +52,16 @@
         <ImageView
             android:id="@+id/iv_peel"
             android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
             android:layout_height="wrap_content"
             android:src="@mipmap/ic_peel" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
             android:layout_below="@id/iv_peel"
-            android:text="去皮"
+            android:text="@string/set_tare"
             android:textSize="16sp" />
 
 
@@ -77,13 +81,15 @@
             android:id="@+id/iv_item_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
             android:src="@mipmap/ic_delete" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/iv_item_delete"
-            android:text="删除"
+            android:layout_centerHorizontal="true"
+            android:text="@string/delete"
             android:textSize="16sp" />
 
 

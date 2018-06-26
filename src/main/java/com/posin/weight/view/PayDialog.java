@@ -18,6 +18,7 @@ import com.posin.weight.R;
 import com.posin.weight.base.BaseDialog;
 import com.posin.weight.utils.DensityUtils;
 import com.posin.weight.utils.DoubleUtil;
+import com.posin.weight.utils.LanguageUtils;
 import com.posin.weight.utils.StringUtils;
 
 import butterknife.BindView;
@@ -33,8 +34,8 @@ import butterknife.OnLongClick;
 public class PayDialog extends BaseDialog implements View.OnLongClickListener, TextWatcher {
 
     private static final String TAG = "PayDialog";
-    //支付金额最大一种占十六个字符串
-    private static final int MAX_PAY_UP_SIZE = 13;
+    //支付金额最大一种占十个字符串
+    private static final int MAX_PAY_UP_SIZE = 10;
 
     @BindView(R.id.tv_pay_sum)
     TextView tvPaySum;
@@ -50,12 +51,14 @@ public class PayDialog extends BaseDialog implements View.OnLongClickListener, T
     private String mPayUp;
     private double mMenuSumMoney;
     private double mChangeMoney;
+    private boolean mIsLcd = false;
     private IPayView mIPayView;
 
-    public PayDialog(Context context, double sum, IPayView iPayView) {
+    public PayDialog(Context context, double sum, boolean isLcd, IPayView iPayView) {
         super(context);
         this.mContext = context;
         this.mMenuSumMoney = sum;
+        this.mIsLcd = isLcd;
         this.mIPayView = iPayView;
     }
 
@@ -82,8 +85,12 @@ public class PayDialog extends BaseDialog implements View.OnLongClickListener, T
         etPayUp.setText(String.valueOf(mMenuSumMoney));
         etPayUp.selectAll();
 
-        mIPayView.displayTotal(String.valueOf(mMenuSumMoney));
-
+        if (mIsLcd) {
+            mIPayView.displayPayMessage(String.valueOf(mMenuSumMoney),
+                    String.valueOf(mMenuSumMoney), "0.0", "0.0");
+        } else {
+            mIPayView.displayTotal(String.valueOf(mMenuSumMoney));
+        }
         btnKeyboardDelete.setOnLongClickListener(this);
         etPayUp.addTextChangedListener(this);
     }
@@ -151,12 +158,24 @@ public class PayDialog extends BaseDialog implements View.OnLongClickListener, T
                 break;
             case R.id.btn_pay_ok:
                 mPayUp = etPayUp.getText().toString().trim();
+                if (mChangeMoney < 0) {
+                    Toast.makeText(mContext, LanguageUtils.isZh(mContext) ?
+                                    "支付金额不能小于总金额..." :
+                                    "The amount of payment should not be less than the total amount ...",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 mIPayView.paySuccess(Double.parseDouble(mPayUp), mChangeMoney);
-                mIPayView.displayChange(StringUtils.decimalFormat(mChangeMoney,2));
+                if (mIsLcd) {
+                    mIPayView.displayPayMessage(String.valueOf(mMenuSumMoney),
+                            mPayUp, StringUtils.decimalFormat(mChangeMoney, 2), "0.0");
+                } else {
+                    mIPayView.displayChange(StringUtils.decimalFormat(mChangeMoney, 2));
+                }
                 break;
             case R.id.btn_pay_cancel:
                 mIPayView.payCancel();
-                mIPayView.displayTotal(StringUtils.decimalFormat(mMenuSumMoney,2));
+                mIPayView.displayTotal(StringUtils.decimalFormat(mMenuSumMoney, 2));
                 break;
             default:
                 break;
@@ -188,8 +207,13 @@ public class PayDialog extends BaseDialog implements View.OnLongClickListener, T
             updateChangeMoney(Double.parseDouble(String.valueOf(
                     Float.parseFloat(etPayUp.getText().toString().trim()))), mMenuSumMoney);
         }
-        mIPayView.displayPayment(String.valueOf(s));
 
+        if (mIsLcd) {
+            mIPayView.displayPayMessage(String.valueOf(mMenuSumMoney),
+                    String.valueOf(s), StringUtils.decimalFormat(mChangeMoney, 2), "0.0");
+        }else{
+            mIPayView.displayPayment(String.valueOf(s));
+        }
     }
 
     @Override
@@ -264,6 +288,17 @@ public class PayDialog extends BaseDialog implements View.OnLongClickListener, T
          * @param value String
          */
         void displayChange(String value);
+
+
+        /**
+         * 显示收银明细
+         *
+         * @param sumMoney    总金额
+         * @param payUp       支付金额
+         * @param changeMoney 找零金额
+         * @param discount    优惠金额
+         */
+        void displayPayMessage(String sumMoney, String payUp, String changeMoney, String discount);
     }
 
 

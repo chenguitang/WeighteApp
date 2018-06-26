@@ -1,6 +1,8 @@
 package com.posin.weight.module.secondary;
 
 
+import java.io.IOException;
+
 /**
  * FileName: ICustomerDisplay
  * Author: Greetty
@@ -33,10 +35,13 @@ public interface ICustomerDisplay {
     /**
      * 单价
      *
-     * @param value String
+     * @param name     名字
+     * @param value    单价
+     * @param weight   重量
+     * @param subtotal 小计
      * @throws Exception
      */
-    void displayPrice(String value) throws Exception;
+    void displayPrice(String name, String value, String weight, String subtotal) throws Exception;
 
     /**
      * 总计
@@ -64,8 +69,10 @@ public interface ICustomerDisplay {
 
     /**
      * 重量
+     *
      * @param value String
      * @throws Exception
      */
     void displayWeight(String value) throws Exception;
+
 }

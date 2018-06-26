@@ -1,3 +1,26 @@
 <resources>
     <string name="app_name">Escale</string>
+    <string name="set_zero">SetZero</string>
+    <string name="set_tare">SetTare</string>
+    <string name="delete">Delete</string>
+    <string name="pay">Pay</string>
+    <string name="menu_food_name">Name</string>
+    <string name="menu_food_price">Prices</string>
+    <string name="menu_food_amount">Amount</string>
+    <string name="menu_food_subtotal">Subtotal</string>
+    <string name="top_weight_tip">Weight:</string>
+    <string name="weight_status_stable">Stable</string>
+    <string name="weight_status_zero">Zero</string>
+    <string name="weight_status_tare">Tare</string>
+    <string name="get_weight_title">Weight Food</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="get_weight_weight_tip">Weight(kg)</string>
+    <string name="value_money">Value(dollar)</string>
+    <string name="get_weight_prices">Prices(dollar)</string>
+    <string name="pay_title">Pay</string>
+    <string name="total_money">Total(dollar)</string>
+    <string name="pay_up_money">PayUp(dollar)</string>
+    <string name="pay_change_money">Change(dollar)</string>
+
 </resources>

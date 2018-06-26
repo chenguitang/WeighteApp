@@ -1,3 +1,27 @@
 <resources>
     <string name="app_name">电子秤</string>
+    <string name="set_zero">置零</string>
+    <string name="set_tare">去皮</string>
+    <string name="delete">删除</string>
+    <string name="pay">收银</string>
+    <string name="menu_food_name">品名</string>
+    <string name="menu_food_price">单价</string>
+    <string name="menu_food_amount">数量</string>
+    <string name="men_food_subtotal">小计</string>
+    <string name="menu_food_subtotal">小计</string>
+    <string name="top_weight_tip">重量:</string>
+    <string name="weight_status_stable">稳定</string>
+    <string name="weight_status_zero">零位</string>
+    <string name="weight_status_tare">去皮</string>
+    <string name="get_weight_title">称重商品</string>
+    <string name="confirm">确认</string>
+    <string name="cancel">取消</string>
+    <string name="get_weight_weight_tip">重量(kg)</string>
+    <string name="value_money">金额(元)</string>
+    <string name="get_weight_prices">单价(元)</string>
+    <string name="pay_title">支付</string>
+    <string name="total_money">总金额(元)</string>
+    <string name="pay_up_money">支付金额(元)</string>
+    <string name="pay_change_money">找零金额(元)</string>
+
 </resources>

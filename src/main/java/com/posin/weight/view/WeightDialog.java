@@ -22,6 +22,7 @@ import com.posin.weight.been.MenuDetail;
 import com.posin.weight.ui.presenter.WeightPresenter;
 import com.posin.weight.utils.DensityUtils;
 import com.posin.weight.utils.DoubleUtil;
+import com.posin.weight.utils.LanguageUtils;
 import com.posin.weight.utils.StringUtils;
 import com.posin.weight.utils.ThreadManage;
 
@@ -68,6 +69,9 @@ public class WeightDialog extends BaseDialog {
     //小计
     private double mSubtotal = 0;
 
+    //是否为中文
+    private boolean isZh = true;
+
     public WeightDialog(Context context, String foodName, double prices,
                         WeightPresenter weightPresenter, WeightDialogView weightDialogView) {
         super(context);
@@ -76,7 +80,7 @@ public class WeightDialog extends BaseDialog {
         this.mPrices = prices;
         this.mWeightPresenter = weightPresenter;
         this.mWeightDialogView = weightDialogView;
-
+        isZh = LanguageUtils.isZh(context);
     }
 
     private Handler mHandler = new Handler() {
@@ -129,7 +133,8 @@ public class WeightDialog extends BaseDialog {
 
         //修改商品名称及商品单价
         tvWeightFoodName.setText(mFoodName);
-        tvGetWeightPrinces.setText(StringUtils.append(mPrices, " 元"));
+        tvGetWeightPrinces.setText(isZh ? StringUtils.append(mPrices, " 元") :
+                StringUtils.append("$", mPrices));
 
 
         //获取实时重量值，并更新重量
@@ -163,7 +168,8 @@ public class WeightDialog extends BaseDialog {
             mWeight = weight;
             mSubtotal = DoubleUtil.round(mWeight * mPrices, 2);
             tvGetWeightWeight.setText(String.format("%.3f KG", mWeight));
-            tvGetWeightMoney.setText(StringUtils.append(mSubtotal, " 元"));
+            tvGetWeightMoney.setText(isZh ? StringUtils.append(mSubtotal, " 元") :
+                    StringUtils.append("$", mSubtotal));
             Message message = new Message();
             message.what = CODE_GET_AND_UPDATE_WEIGHT;
         }

@@ -14,9 +14,11 @@ import java.io.IOException;
 public class LcdCustomerDisplay {
 
     private CustomerDisplay mCustomerDisplay;
+    private boolean isZh = true;
 
-    public LcdCustomerDisplay() throws Throwable {
+    public LcdCustomerDisplay(boolean isZh) throws Throwable {
         mCustomerDisplay = CustomerDisplay.newInstance();
+        this.isZh = isZh;
     }
 
     /**
@@ -46,15 +48,27 @@ public class LcdCustomerDisplay {
     }
 
     /**
+     * 显示商品名称
+     *
+     * @param value String
+     * @throws IOException
+     */
+    public void displayName(String value) throws IOException {
+        mCustomerDisplay.write(StringUtils.append(isZh ? "品名：" : "  Name:", value));
+    }
+
+    /**
      * 显示单价
      *
      * @param value String
      * @throws IOException
      */
     public void displayPrice(String value) throws IOException {
-        mCustomerDisplay.clear();
-        mCustomerDisplay.setCursorPos(1,1);
-        mCustomerDisplay.write(StringUtils.append("单价：",value," 元"));
+        if (isZh) {
+            mCustomerDisplay.write(StringUtils.append("单价：", value, " 元"));
+        } else {
+            mCustomerDisplay.write(StringUtils.append("Prices:$", value));
+        }
     }
 
     /**
@@ -64,9 +78,11 @@ public class LcdCustomerDisplay {
      * @throws IOException
      */
     public void displayTotal(String value) throws IOException {
-        mCustomerDisplay.clear();
-        mCustomerDisplay.setCursorPos(1,1);
-        mCustomerDisplay.write(StringUtils.append("总计：",value," 元"));
+        if (isZh) {
+            mCustomerDisplay.write(StringUtils.append("总计：", value, " 元"));
+        } else {
+            mCustomerDisplay.write(StringUtils.append(" Total:$", value));
+        }
     }
 
     /**
@@ -75,10 +91,13 @@ public class LcdCustomerDisplay {
      * @param value String
      * @throws IOException
      */
+
     public void displayPayment(String value) throws IOException {
-        mCustomerDisplay.clear();
-        mCustomerDisplay.setCursorPos(1,1);
-        mCustomerDisplay.write(StringUtils.append("收款：",value," 元"));
+        if (isZh) {
+            mCustomerDisplay.write(StringUtils.append("收款：", value, " 元"));
+        } else {
+            mCustomerDisplay.write(StringUtils.append("  Pays:$", value));
+        }
     }
 
     /**
@@ -88,9 +107,25 @@ public class LcdCustomerDisplay {
      * @throws IOException
      */
     public void displayChange(String value) throws IOException {
-        mCustomerDisplay.clear();
-        mCustomerDisplay.setCursorPos(1,1);
-        mCustomerDisplay.write(StringUtils.append("找零：",value," 元"));
+        if (isZh) {
+            mCustomerDisplay.write(StringUtils.append("找零：", value, " 元"));
+        } else {
+            mCustomerDisplay.write(StringUtils.append("Change:$", value));
+        }
+    }
+
+    /**
+     * 显示小计
+     *
+     * @param value String
+     * @throws IOException
+     */
+    public void displaySubtotal(String value) throws IOException {
+        if (isZh) {
+            mCustomerDisplay.write(StringUtils.append("小计：", value, " 元"));
+        } else {
+            mCustomerDisplay.write(StringUtils.append("   Sub:$", value));
+        }
     }
 
     /**
@@ -100,9 +135,38 @@ public class LcdCustomerDisplay {
      * @throws IOException
      */
     public void displayWeight(String value) throws IOException {
-        mCustomerDisplay.clear();
-        mCustomerDisplay.setCursorPos(1,1);
-        mCustomerDisplay.write(StringUtils.append("重量：",value," KG"));
+        if (isZh) {
+            mCustomerDisplay.write(StringUtils.append("重量：", value, " KG"));
+        } else {
+            mCustomerDisplay.write(StringUtils.append("Weight:", value, " KG"));
+
+        }
+    }
+
+    /**
+     * 显示优惠金额
+     *
+     * @param value String
+     * @throws IOException
+     */
+    public void displayDiscount(String value) throws IOException {
+        if (isZh) {
+            mCustomerDisplay.write(StringUtils.append("优惠：", value, " 元"));
+        } else {
+            mCustomerDisplay.write(StringUtils.append(" Discd:$", value));
+
+        }
+    }
+
+    /**
+     * 设置显示开始位置光标
+     *
+     * @param x x坐标
+     * @param y y坐标
+     * @throws IOException
+     */
+    public void setCursorPos(int x, int y) throws IOException {
+        mCustomerDisplay.setCursorPos(x, y);
     }
 
 }
