@@ -29,7 +29,7 @@
                 android:id="@+id/iv_food_intro"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:src="@mipmap/ic_launcher" />
+                android:src="@mipmap/ic_launcher_1" />
 
             <TextView
                 android:id="@+id/tv_food_name"

@@ -7,7 +7,6 @@
     <string name="menu_food_name">品名</string>
     <string name="menu_food_price">单价</string>
     <string name="menu_food_amount">数量</string>
-    <string name="men_food_subtotal">小计</string>
     <string name="menu_food_subtotal">小计</string>
     <string name="top_weight_tip">重量:</string>
     <string name="weight_status_stable">稳定</string>

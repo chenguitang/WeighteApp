@@ -117,7 +117,7 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
     private RvFoodTypeDetailAdapter rvFoodTypeDetailAdapter;
 
     private int flowNumber = 666;
-    private int oddNumber = 87154;
+    private int orderNumber = 87154;
 
     private WeightPresenter mWeightPresenter;
     private WeightDialog mWeightDialog;
@@ -127,6 +127,7 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
     private long mSecShowOthersTime;
 
     private boolean mSecLcdClear = true;
+    private int mWeightLength = 0; //重量值的长度
 
 
     private double mSum;
@@ -285,7 +286,7 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
 
     @Override
     public void initToolBar() {
-        mCommonToolbar.setLogo(R.mipmap.ic_launcher);
+        mCommonToolbar.setLogo(R.mipmap.scalen);
         mCommonToolbar.setTitle(R.string.app_name);
     }
 
@@ -378,9 +379,13 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
                     SecDisplayUtils.getInstance().displayWeight(secFormatWight);
                     mSecLcdClear = false;
                 } else {
-                    SecDisplayUtils.getInstance().displayWightUnClear(secFormatWight);
+                    if (mWeightLength <= 6 || String.valueOf(weight).length() == mWeightLength) {
+                        SecDisplayUtils.getInstance().displayWightUnClear(secFormatWight);
+                    } else {
+                        SecDisplayUtils.getInstance().displayWeight(secFormatWight);
+                    }
                 }
-
+                mWeightLength = String.valueOf(weight).length();
             } else {
                 mSecLcdClear = true;
             }
@@ -486,9 +491,11 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
         try {
             PrinterUtils.getInstance().printMenuDetail(menuDetailList, mSum,
                     payUp, changeMoney, 0.0, flowNumber, StringUtils.append("20154641654",
-                            oddNumber), isZh);
+                            orderNumber), isZh);
         } catch (Throwable throwable) {
             throwable.printStackTrace();
+            Toast.makeText(mContext, (isZh ? "出错了：" : "Error:") + throwable.getMessage(),
+                    Toast.LENGTH_SHORT).show();
         }
 
         mSum = 0;
@@ -496,7 +503,7 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
         rvMenuDetailAdapter.setList_bean(menuDetailList);
         rvMenuDetailAdapter.notifyDataSetChanged();
 
-        oddNumber++;
+        orderNumber++;
         flowNumber++;
         Toast.makeText(mContext, isZh ? "支付成功 " : "pay success",
                 Toast.LENGTH_SHORT).show();
