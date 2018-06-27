@@ -17,18 +17,23 @@ import java.util.List;
 public class RvMenuDetailAdapter extends RVAdapter<MenuDetail> {
 
     private List<MenuDetail> list_bean;
+    private RvMenuDetailView mRvMenuDetailView;
+    private boolean isZh;
 
-    public RvMenuDetailAdapter(List<MenuDetail> list_bean) {
+    public RvMenuDetailAdapter(List<MenuDetail> list_bean, RvMenuDetailView rvMenuDetailView,
+                               boolean isZh) {
         super(list_bean);
         this.list_bean = list_bean;
+        this.mRvMenuDetailView = rvMenuDetailView;
+        this.isZh = isZh;
     }
 
     @Override
     public void bindDataToView(RVViewHolder holder, int position, MenuDetail bean, boolean isSelected) {
         holder.setText(R.id.tv_menu_name, bean.getName());
         holder.setText(R.id.tv_menu_weight, "x" + bean.getWeight());
-        holder.setText(R.id.tv_menu_prices, "￥" + bean.getPrices());
-        holder.setText(R.id.tv_menu_subtotal, "￥" + bean.getSubtotal());
+        holder.setText(R.id.tv_menu_prices, (isZh ? "￥" : "$") + bean.getPrices());
+        holder.setText(R.id.tv_menu_subtotal, (isZh ? "￥" : "$") + bean.getSubtotal());
 
         if (isSelected) {
             holder.getView(R.id.rl_menu_item).setBackgroundColor(Color.parseColor("#CBC2A1"));
@@ -45,7 +50,11 @@ public class RvMenuDetailAdapter extends RVAdapter<MenuDetail> {
 
     @Override
     public void onItemClick(int position, MenuDetail bean) {
+        mRvMenuDetailView.onMenuItemClick(position, bean);
+    }
 
+    public interface RvMenuDetailView {
+        void onMenuItemClick(int position, MenuDetail menuDetail);
     }
 
 }

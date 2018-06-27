@@ -35,7 +35,7 @@ public class PayDialog extends BaseDialog implements View.OnLongClickListener, T
 
     private static final String TAG = "PayDialog";
     //支付金额最大一种占十个字符串
-    private static final int MAX_PAY_UP_SIZE = 10;
+    private static final int MAX_PAY_UP_SIZE = 9;
 
     @BindView(R.id.tv_pay_sum)
     TextView tvPaySum;
@@ -175,7 +175,9 @@ public class PayDialog extends BaseDialog implements View.OnLongClickListener, T
                 break;
             case R.id.btn_pay_cancel:
                 mIPayView.payCancel();
-                mIPayView.displayTotal(StringUtils.decimalFormat(mMenuSumMoney, 2));
+                if (!mIsLcd) {
+                    mIPayView.displayTotal(StringUtils.decimalFormat(mMenuSumMoney, 2));
+                }
                 break;
             default:
                 break;
@@ -211,7 +213,7 @@ public class PayDialog extends BaseDialog implements View.OnLongClickListener, T
         if (mIsLcd) {
             mIPayView.displayPayMessage(String.valueOf(mMenuSumMoney),
                     String.valueOf(s), StringUtils.decimalFormat(mChangeMoney, 2), "0.0");
-        }else{
+        } else {
             mIPayView.displayPayment(String.valueOf(s));
         }
     }

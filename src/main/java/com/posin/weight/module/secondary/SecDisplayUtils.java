@@ -87,16 +87,14 @@ public class SecDisplayUtils implements ICustomerDisplay {
     public void displayPrice(String name, String value, String weight,
                              String subtotal) throws IOException {
         if (isLcd()) {
-            mLcdCustomerDisplay.clear();
-
             mLcdCustomerDisplay.setCursorPos(0, 0);
             mLcdCustomerDisplay.displayName(name);
 
             mLcdCustomerDisplay.setCursorPos(1, 0);
-            mLcdCustomerDisplay.displayPrice(value);
+            mLcdCustomerDisplay.displayWeight(weight);
 
             mLcdCustomerDisplay.setCursorPos(2, 0);
-            mLcdCustomerDisplay.displayWeight(weight);
+            mLcdCustomerDisplay.displayPrice(value);
 
             mLcdCustomerDisplay.setCursorPos(3, 0);
             mLcdCustomerDisplay.displaySubtotal(subtotal);
@@ -106,10 +104,20 @@ public class SecDisplayUtils implements ICustomerDisplay {
         }
     }
 
+    /**
+     * LED客显更新单价
+     *
+     * @param value 单价
+     * @throws IOException
+     */
+    public void displayLedPrice(String value) throws IOException {
+        if (!isLcd())
+            mLedCustomerDisplay.displayPrice(value);
+    }
+
     @Override
     public void displayTotal(String value) throws IOException {
         if (isLcd()) {
-            mLcdCustomerDisplay.clear();
             mLcdCustomerDisplay.setCursorPos(1, 0);
             mLcdCustomerDisplay.displayTotal(value);
         } else {
@@ -120,7 +128,6 @@ public class SecDisplayUtils implements ICustomerDisplay {
     @Override
     public void displayPayment(String value) throws IOException {
         if (isLcd()) {
-            mLcdCustomerDisplay.clear();
             mLcdCustomerDisplay.setCursorPos(1, 0);
             mLcdCustomerDisplay.displayPayment(value);
         } else {
@@ -131,7 +138,6 @@ public class SecDisplayUtils implements ICustomerDisplay {
     @Override
     public void displayChange(String value) throws IOException {
         if (isLcd()) {
-            mLcdCustomerDisplay.clear();
             mLcdCustomerDisplay.setCursorPos(1, 0);
             mLcdCustomerDisplay.displayChange(value);
         } else {
@@ -142,7 +148,6 @@ public class SecDisplayUtils implements ICustomerDisplay {
     @Override
     public void displayWeight(String value) throws Exception {
         if (isLcd()) {
-            mLcdCustomerDisplay.clear();
             mLcdCustomerDisplay.setCursorPos(1, 0);
             mLcdCustomerDisplay.displayWeight(value);
         } else {
@@ -152,12 +157,36 @@ public class SecDisplayUtils implements ICustomerDisplay {
 
     public void displayWightUnClear(String value) throws Exception {
         if (isLcd()) {
-            mLcdCustomerDisplay.setCursorPos(1, 0);
+            mLcdCustomerDisplay.setCursorPos(0, 0);
             mLcdCustomerDisplay.displayWeight(value);
-        }else {
+        } else {
             mLedCustomerDisplay.displayWeight(value);
         }
     }
+
+    /**
+     * 更新商品名称，重量使用动态值
+     *
+     * @param name     商品名称
+     * @param prices   商品单价
+     * @param subtotal 小计
+     * @throws IOException
+     */
+    public void displayUpdateFood(String name, String prices,
+                                  String subtotal) throws IOException {
+        if (isLcd()) {
+            mLcdCustomerDisplay.setCursorPos(0, 0);
+            mLcdCustomerDisplay.displayName(name);
+
+            mLcdCustomerDisplay.setCursorPos(2, 0);
+            mLcdCustomerDisplay.displayPrice(prices);
+
+            mLcdCustomerDisplay.setCursorPos(3, 0);
+            mLcdCustomerDisplay.displaySubtotal(subtotal);
+
+        }
+    }
+
 
     /**
      * 显示收银明细
@@ -170,7 +199,7 @@ public class SecDisplayUtils implements ICustomerDisplay {
     public void displayPayMessage(String sumMoney, String payUp, String changeMoney,
                                   String discount) throws Exception {
         if (isLcd()) {
-            mLcdCustomerDisplay.clear();
+//            mLcdCustomerDisplay.clear();
 
             mLcdCustomerDisplay.setCursorPos(0, 0);
             mLcdCustomerDisplay.displayTotal(TextUtils.isEmpty(sumMoney) ? "0.0" : sumMoney);

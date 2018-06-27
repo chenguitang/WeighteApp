@@ -25,7 +25,22 @@ public class StringUtils {
     }
 
     /**
+     * 增加空格数
+     *
+     * @param size 空格数量
+     * @return String
+     */
+    public static String appendSpace(int size) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < size; i++) {
+            sb.append(" ");
+        }
+        return sb.toString();
+    }
+
+    /**
      * 格式化Double字符
+     *
      * @param value double
      * @param scale int 保留几位数
      * @return String

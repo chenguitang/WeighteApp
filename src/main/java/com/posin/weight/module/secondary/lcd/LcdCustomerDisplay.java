@@ -54,7 +54,18 @@ public class LcdCustomerDisplay {
      * @throws IOException
      */
     public void displayName(String value) throws IOException {
-        mCustomerDisplay.write(StringUtils.append(isZh ? "品名：" : "  Name:", value));
+        if (isZh) {
+            int leaveSize = LcdConstant.getLineLength() - value.length() * 2;
+            mCustomerDisplay.write(StringUtils.append(StringUtils.appendSpace(
+                    leaveSize / 2), value, StringUtils.appendSpace(
+                    leaveSize % 2 == 0 ? leaveSize / 2 : (leaveSize / 2 + 1))));
+        } else {
+            int leaveSize = LcdConstant.getLineLength() - value.length();
+            mCustomerDisplay.write(StringUtils.append(StringUtils.appendSpace(
+                    leaveSize / 2), value, StringUtils.appendSpace(
+                    leaveSize % 2 == 0 ? leaveSize / 2 : (leaveSize / 2 + 1))));
+        }
+
     }
 
     /**
@@ -65,9 +76,11 @@ public class LcdCustomerDisplay {
      */
     public void displayPrice(String value) throws IOException {
         if (isZh) {
-            mCustomerDisplay.write(StringUtils.append("单价：", value, " 元"));
+            mCustomerDisplay.write(StringUtils.append("单价:", value, "元",
+                    StringUtils.appendSpace(LcdConstant.getLineLength() - value.length() - 7)));
         } else {
-            mCustomerDisplay.write(StringUtils.append("Prices:$", value));
+            mCustomerDisplay.write(StringUtils.append("Prices:$", value,
+                    StringUtils.appendSpace(LcdConstant.getLineLength() - value.length() - 8)));
         }
     }
 
@@ -79,9 +92,11 @@ public class LcdCustomerDisplay {
      */
     public void displayTotal(String value) throws IOException {
         if (isZh) {
-            mCustomerDisplay.write(StringUtils.append("总计：", value, " 元"));
+            mCustomerDisplay.write(StringUtils.append("总计:", value, "元",
+                    StringUtils.appendSpace(LcdConstant.getLineLength() - value.length() - 7)));
         } else {
-            mCustomerDisplay.write(StringUtils.append(" Total:$", value));
+            mCustomerDisplay.write(StringUtils.append(" Total:$", value,
+                    StringUtils.appendSpace(LcdConstant.getLineLength() - value.length() - 8)));
         }
     }
 
@@ -94,9 +109,11 @@ public class LcdCustomerDisplay {
 
     public void displayPayment(String value) throws IOException {
         if (isZh) {
-            mCustomerDisplay.write(StringUtils.append("收款：", value, " 元"));
+            mCustomerDisplay.write(StringUtils.append("收款:", value, "元",
+                    StringUtils.appendSpace(LcdConstant.getLineLength() - value.length() - 7)));
         } else {
-            mCustomerDisplay.write(StringUtils.append("  Pays:$", value));
+            mCustomerDisplay.write(StringUtils.append("  Pays:$", value,
+                    StringUtils.appendSpace(LcdConstant.getLineLength() - value.length() - 8)));
         }
     }
 
@@ -108,9 +125,11 @@ public class LcdCustomerDisplay {
      */
     public void displayChange(String value) throws IOException {
         if (isZh) {
-            mCustomerDisplay.write(StringUtils.append("找零：", value, " 元"));
+            mCustomerDisplay.write(StringUtils.append("找零:", value, "元",
+                    StringUtils.appendSpace(LcdConstant.getLineLength() - value.length() - 7)));
         } else {
-            mCustomerDisplay.write(StringUtils.append("Change:$", value));
+            mCustomerDisplay.write(StringUtils.append("Change:$", value,
+                    StringUtils.appendSpace(LcdConstant.getLineLength() - value.length() - 8)));
         }
     }
 
@@ -122,9 +141,11 @@ public class LcdCustomerDisplay {
      */
     public void displaySubtotal(String value) throws IOException {
         if (isZh) {
-            mCustomerDisplay.write(StringUtils.append("小计：", value, " 元"));
+            mCustomerDisplay.write(StringUtils.append("小计:", value, "元",
+                    StringUtils.appendSpace(LcdConstant.getLineLength() - value.length() - 7)));
         } else {
-            mCustomerDisplay.write(StringUtils.append("   Sub:$", value));
+            mCustomerDisplay.write(StringUtils.append("   Sub:$", value,
+                    StringUtils.appendSpace(LcdConstant.getLineLength() - value.length() - 8)));
         }
     }
 
@@ -136,9 +157,11 @@ public class LcdCustomerDisplay {
      */
     public void displayWeight(String value) throws IOException {
         if (isZh) {
-            mCustomerDisplay.write(StringUtils.append("重量：", value, " KG"));
+            mCustomerDisplay.write(StringUtils.append("重量:", value, "KG",
+                    StringUtils.appendSpace(LcdConstant.getLineLength() - value.length() - 7)));
         } else {
-            mCustomerDisplay.write(StringUtils.append("Weight:", value, " KG"));
+            mCustomerDisplay.write(StringUtils.append("Weight:", value, "KG",
+                    StringUtils.appendSpace(LcdConstant.getLineLength() - value.length() - 8)));
 
         }
     }
@@ -151,10 +174,11 @@ public class LcdCustomerDisplay {
      */
     public void displayDiscount(String value) throws IOException {
         if (isZh) {
-            mCustomerDisplay.write(StringUtils.append("优惠：", value, " 元"));
+            mCustomerDisplay.write(StringUtils.append("优惠:", value, "元",
+                    StringUtils.appendSpace(LcdConstant.getLineLength() - value.length() - 7)));
         } else {
-            mCustomerDisplay.write(StringUtils.append(" Discd:$", value));
-
+            mCustomerDisplay.write(StringUtils.append(" Discd:$", value,
+                    StringUtils.appendSpace(LcdConstant.getLineLength() - value.length() - 8)));
         }
     }
 
