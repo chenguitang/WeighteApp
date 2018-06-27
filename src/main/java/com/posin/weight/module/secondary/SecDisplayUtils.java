@@ -154,6 +154,8 @@ public class SecDisplayUtils implements ICustomerDisplay {
         if (isLcd()) {
             mLcdCustomerDisplay.setCursorPos(1, 0);
             mLcdCustomerDisplay.displayWeight(value);
+        }else {
+            mLedCustomerDisplay.displayWeight(value);
         }
     }
 
