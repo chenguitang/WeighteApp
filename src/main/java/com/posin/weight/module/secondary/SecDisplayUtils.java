@@ -84,8 +84,8 @@ public class SecDisplayUtils implements ICustomerDisplay {
     }
 
     @Override
-    public void displayPrice(String name, String value, String weight,
-                             String subtotal) throws IOException {
+    public void displayLcdPrice(String name, String value, String weight,
+                                String subtotal) throws IOException {
         if (isLcd()) {
             mLcdCustomerDisplay.setCursorPos(0, 0);
             mLcdCustomerDisplay.displayName(name);
@@ -98,9 +98,6 @@ public class SecDisplayUtils implements ICustomerDisplay {
 
             mLcdCustomerDisplay.setCursorPos(3, 0);
             mLcdCustomerDisplay.displaySubtotal(subtotal);
-
-        } else {
-            mLedCustomerDisplay.displayPrice(value);
         }
     }
 
@@ -110,9 +107,12 @@ public class SecDisplayUtils implements ICustomerDisplay {
      * @param value 单价
      * @throws IOException
      */
+    @Override
     public void displayLedPrice(String value) throws IOException {
-        if (!isLcd())
+        if (!isLcd()) {
+            mLcdCustomerDisplay.setCursorPos(2, 0);
             mLedCustomerDisplay.displayPrice(value);
+        }
     }
 
     @Override
@@ -155,14 +155,6 @@ public class SecDisplayUtils implements ICustomerDisplay {
         }
     }
 
-    public void displayWightUnClear(String value) throws Exception {
-        if (isLcd()) {
-            mLcdCustomerDisplay.setCursorPos(0, 0);
-            mLcdCustomerDisplay.displayWeight(value);
-        } else {
-            mLedCustomerDisplay.displayWeight(value);
-        }
-    }
 
     /**
      * 更新商品名称，重量使用动态值
@@ -172,6 +164,7 @@ public class SecDisplayUtils implements ICustomerDisplay {
      * @param subtotal 小计
      * @throws IOException
      */
+    @Override
     public void displayUpdateFood(String name, String prices,
                                   String subtotal) throws IOException {
         if (isLcd()) {
@@ -187,6 +180,22 @@ public class SecDisplayUtils implements ICustomerDisplay {
         }
     }
 
+    @Override
+    public void displayLcdUpdateName(String name) throws IOException {
+        if (isLcd()) {
+            mLcdCustomerDisplay.setCursorPos(0, 0);
+            mLcdCustomerDisplay.displayName(name);
+        }
+    }
+
+    @Override
+    public void displayLcdUpdateSubtotal(String subtotal) throws IOException {
+        if (isLcd()) {
+            mLcdCustomerDisplay.setCursorPos(3, 0);
+            mLcdCustomerDisplay.displaySubtotal(subtotal);
+        }
+    }
+
 
     /**
      * 显示收银明细
@@ -196,11 +205,10 @@ public class SecDisplayUtils implements ICustomerDisplay {
      * @param changeMoney 找零金额
      * @param discount    优惠金额
      */
+    @Override
     public void displayPayMessage(String sumMoney, String payUp, String changeMoney,
                                   String discount) throws Exception {
         if (isLcd()) {
-//            mLcdCustomerDisplay.clear();
-
             mLcdCustomerDisplay.setCursorPos(0, 0);
             mLcdCustomerDisplay.displayTotal(TextUtils.isEmpty(sumMoney) ? "0.0" : sumMoney);
 

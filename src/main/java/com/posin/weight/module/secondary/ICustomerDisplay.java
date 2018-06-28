@@ -41,7 +41,15 @@ public interface ICustomerDisplay {
      * @param subtotal 小计
      * @throws Exception
      */
-    void displayPrice(String name, String value, String weight, String subtotal) throws Exception;
+    void displayLcdPrice(String name, String value, String weight, String subtotal) throws Exception;
+
+    /**
+     * LED客显显示单价
+     *
+     * @param value 单价
+     * @throws IOException
+     */
+    void displayLedPrice(String value) throws IOException;
 
     /**
      * 总计
@@ -75,4 +83,44 @@ public interface ICustomerDisplay {
      */
     void displayWeight(String value) throws Exception;
 
+    /**
+     * LCD客显更新商品名称
+     *
+     * @param name     品名
+     * @param prices   单价
+     * @param subtotal 小计
+     * @throws IOException
+     */
+    void displayUpdateFood(String name, String prices,
+                           String subtotal) throws IOException;
+
+
+    /**
+     * 更新LCD显示商品名字
+     *
+     * @param name 品名
+     * @throws IOException
+     */
+    void displayLcdUpdateName(String name) throws IOException;
+
+
+    /**
+     * 更新LCD显示小计金额
+     *
+     * @param subtotal 小计
+     * @throws IOException
+     */
+    void displayLcdUpdateSubtotal(String subtotal) throws IOException;
+
+    /**
+     * 更新收银明细
+     *
+     * @param sumMoney    总计金额
+     * @param payUp       支付金额
+     * @param changeMoney 找零金额
+     * @param discount    优惠金额
+     * @throws Exception
+     */
+    void displayPayMessage(String sumMoney, String payUp, String changeMoney,
+                           String discount) throws Exception;
 }

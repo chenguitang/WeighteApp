@@ -155,13 +155,6 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
         initFoodType();
         initFoodDetail();
 
-//        try {
-//            SecDisplayUtils.getInstance().displayPrice(isZh ? "欢迎光临" : "Welcome",
-//                    "0.00", "0.00", "0.00");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
     }
 
     @Override
@@ -214,6 +207,20 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
             mWeightDialog = new WeightDialog(MainActivity.this, food.getName(), food.getPrices(),
                     mWeightPresenter, MainActivity.this);
             mWeightDialog.show();
+
+            //控制客显显示内容
+            try {
+                float weight = mWeightPresenter.getWeight();
+                SecDisplayUtils.getInstance().displayLcdPrice(
+                        String.valueOf(food.getName())
+                        , String.valueOf(food.getPrices())
+                        , String.valueOf(String.format("%.3f", weight))
+                        , String.valueOf(DoubleUtil.round(weight * food.getPrices(), 2))
+                );
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         } else {
             Log.e(TAG, "mWeightDialog !=null ,Please close the Dialog that is being displayed");
         }
@@ -231,7 +238,9 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
         rvFoodTypeDetailAdapter.notifyDataSetChanged();
     }
 
-
+    /**
+     * 点击菜单栏
+     */
     @Override
     public void onMenuItemClick(int position, MenuDetail menuDetail) {
 
@@ -425,13 +434,19 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
 //                        (System.currentTimeMillis() - mSecShowOthersTime));
                 if (mLcdShowInit) {
                     if (System.currentTimeMillis() - mSecShowOthersTime >= 1000) {
-                        SecDisplayUtils.getInstance().displayPrice(isZh ? "欢迎光临" : "Welcome",
+                        SecDisplayUtils.getInstance().displayLcdPrice(isZh ? "欢迎光临" : "Welcome",
                                 "0.00", secFormatWight, "0.00");
                         mLcdShowInit = false;
                     }
                 } else {
                     if (mPayDialog == null) {
                         SecDisplayUtils.getInstance().displayWeight(secFormatWight);
+                    }
+
+                    if (mWeightDialog != null) {
+                        SecDisplayUtils.getInstance().displayLcdUpdateSubtotal(
+                                String.valueOf(DoubleUtil.round(weightFloat *
+                                        mWeightDialog.getFoodPrices(), 2)));
                     }
                 }
             } else {
@@ -440,7 +455,6 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
                     SecDisplayUtils.getInstance().displayWeight(secFormatWight);
                 }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -476,6 +490,25 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
             }
             mWeightDialog = null;
         }
+
+        try {
+            if (isLcd) {
+                if (rvMenuDetailAdapter.getItemCount() > 0) {
+                    int selectedPosition = rvMenuDetailAdapter.getSelectedPosition();
+                    MenuDetail menuDetail = menuDetailList.get(selectedPosition);
+
+                    SecDisplayUtils.getInstance().displayUpdateFood(menuDetail.getName(),
+                            String.valueOf(menuDetail.getPrices()),
+                            String.valueOf(menuDetail.getSubtotal()));
+                } else {
+                    SecDisplayUtils.getInstance().displayUpdateFood(isZh ? "欢迎光临" :
+                            "Welcome", "0.00", "0.00");
+                }
+            }
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -491,17 +524,9 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
 
         //显示单价，更新客显显示非重量的时间
         mSecShowOthersTime = System.currentTimeMillis();
-
-        //控制客显显示内容
         try {
-            SecDisplayUtils.getInstance().displayPrice(
-                    String.valueOf(menuDetail.getName())
-                    , String.valueOf(menuDetail.getPrices())
-                    , String.valueOf(String.format("%.3f", menuDetail.getWeight()))
-                    , String.valueOf(menuDetail.getSubtotal())
-            );
-//            SecDisplayUtils.getInstance().displayWeight(String.valueOf(menuDetail.getWeight()));
-        } catch (Exception e) {
+            SecDisplayUtils.getInstance().displayLedPrice(String.valueOf(menuDetail.getPrices()));
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -530,7 +555,7 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
         int selectedPosition = rvMenuDetailAdapter.getSelectedPosition();
         MenuDetail menuDetail = menuDetailList.get(selectedPosition);
         try {
-            SecDisplayUtils.getInstance().displayPrice(menuDetail.getName(),
+            SecDisplayUtils.getInstance().displayLcdPrice(menuDetail.getName(),
                     String.valueOf(menuDetail.getPrices()),
                     String.format("%.3f", mWeightPresenter.getWeight()),
                     String.valueOf(menuDetail.getSubtotal()));

@@ -35,7 +35,7 @@ public class PayDialog extends BaseDialog implements View.OnLongClickListener, T
 
     private static final String TAG = "PayDialog";
     //支付金额最大一种占十个字符串
-    private static final int MAX_PAY_UP_SIZE = 9;
+    private static final int MAX_PAY_UP_SIZE = 10;
 
     @BindView(R.id.tv_pay_sum)
     TextView tvPaySum;

@@ -19,6 +19,7 @@ import com.lcodecore.tkrefreshlayout.utils.DensityUtil;
 import com.posin.weight.R;
 import com.posin.weight.base.BaseDialog;
 import com.posin.weight.been.MenuDetail;
+import com.posin.weight.module.secondary.SecDisplayUtils;
 import com.posin.weight.ui.presenter.WeightPresenter;
 import com.posin.weight.utils.DensityUtils;
 import com.posin.weight.utils.DoubleUtil;
@@ -83,31 +84,6 @@ public class WeightDialog extends BaseDialog {
         isZh = LanguageUtils.isZh(context);
     }
 
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case CODE_GET_AND_UPDATE_WEIGHT:
-                    try {
-                        mWeight = mWeightPresenter.getWeight();
-                        mSubtotal = DoubleUtil.round(mWeight * mPrices, 2);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    tvGetWeightWeight.setText(StringUtils.append(mWeight, "KG"));
-                    tvGetWeightMoney.setText(StringUtils.append(mSubtotal, " 元"));
-                    Message message = new Message();
-                    message.what = CODE_GET_AND_UPDATE_WEIGHT;
-                    if (isShowing()) {
-                        mHandler.sendMessageDelayed(message, 500);
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
-
 
     @Override
     public int getLayoutId() {
@@ -170,9 +146,17 @@ public class WeightDialog extends BaseDialog {
             tvGetWeightWeight.setText(String.format("%.3f KG", mWeight));
             tvGetWeightMoney.setText(isZh ? StringUtils.append(mSubtotal, " 元") :
                     StringUtils.append("$", mSubtotal));
-            Message message = new Message();
-            message.what = CODE_GET_AND_UPDATE_WEIGHT;
         }
+    }
+
+
+    /**
+     * 获取商品单价
+     *
+     * @return double
+     */
+    public double getFoodPrices() {
+        return mPrices;
     }
 
 
