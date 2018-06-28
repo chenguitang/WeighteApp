@@ -160,7 +160,7 @@ public class FoodTypeDetailData {
                 break;
             case "刺身":
                 foodList.clear();
-                foodList.add(new Food("", 5.5));
+                foodList.add(new Food("三文鱼刺身", 5.5));
                 foodList.add(new Food("北极贝刺身", 75.5));
                 foodList.add(new Food("八爪鱼刺身", 85.5));
                 foodList.add(new Food("赤贝刺身", 65.5));

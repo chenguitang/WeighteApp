@@ -163,15 +163,17 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
      * 初始化各种Adapter适配器
      */
     private void initAdapter() {
-        //菜品明细（某一个类型的菜品所有种类）
-        foodList = FoodTypeDetailData.getFoodTypeDetail(isZh ? "水果" : "Fruits");
-        rvFoodTypeDetailAdapter = new RvFoodTypeDetailAdapter(foodList, this, isZh);
-        grvFoodDetail.setAdapter(rvFoodTypeDetailAdapter, 3, false, false);
         //菜品种类使用方法
         rvFoodTypeAdapter = new RvFoodTypeAdapter(FoodTypeData.getFoodTypes(isZh), this);
         rvFoodTypeAdapter.setSelectedPosition(0);
         hrvFoodType.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL));
         hrvFoodType.setAdapter(rvFoodTypeAdapter);
+
+        //菜品明细（某一个类型的菜品所有种类）
+        foodList = FoodTypeDetailData.getFoodTypeDetail(isZh ? "水果" : "Fruits");
+        rvFoodTypeDetailAdapter = new RvFoodTypeDetailAdapter(foodList, this, isZh);
+        grvFoodDetail.setAdapter(rvFoodTypeDetailAdapter, 3, false, false);
+
         //菜单明细使用方法
         menuDetailList = new ArrayList<>();
         rvMenuDetailAdapter = new RvMenuDetailAdapter(menuDetailList, this, isZh);
@@ -201,7 +203,6 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         } else {
             Log.e(TAG, "mWeightDialog !=null ,Please close the Dialog that is being displayed");
         }

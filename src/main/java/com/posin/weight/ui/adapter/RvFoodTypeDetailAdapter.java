@@ -27,10 +27,6 @@ public class RvFoodTypeDetailAdapter extends RVAdapter<Food> {
         super(list_bean);
         this.mRvFoodTypeDetailView = rvFoodTypeDetailView;
         this.mIsZh = isZh;
-
-        for (Food food : list_bean) {
-            Log.e(TAG, "food: " + food.toString());
-        }
     }
 
     @Override
