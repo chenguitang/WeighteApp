@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include layout="@layout/davide_horizontal_line"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/TextView04"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="传感器当前值: "
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <EditText
+            android:id="@+id/ed_ad_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:enabled="false"
+            android:inputType="number"
+            android:text="0" >
+
+            <requestFocus />
+
+        </EditText>
+
+        <Button
+            android:id="@+id/btn_save_config"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="保存配置" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/TextView03"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="T值: "
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <EditText
+            android:id="@+id/ed_temp_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:enabled="false"
+            android:inputType="number"
+            android:text="0" />
+
+        <TextView
+            android:id="@+id/TextView09"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="S值: "
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <EditText
+            android:id="@+id/ed_temp_std"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:enabled="false"
+            android:inputType="number"
+            android:text="0" />
+
+    </LinearLayout>
+
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/TextView11"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="Z值: "
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <EditText
+            android:id="@+id/ed_temp_zero"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:enabled="false"
+            android:inputType="number"
+            android:text="0" />
+
+        <TextView
+            android:id="@+id/TextView10"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="重量: "
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <EditText
+            android:id="@+id/ed_weight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:enabled="false"
+            android:inputType="number"
+            android:text="0" />
+
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/TextView02"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="最大量程(KG): "
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <EditText
+            android:id="@+id/ed_max_weight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:enabled="false"
+            android:inputType="number"
+            android:text="30" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/TextView01"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="标定重量0 (0KG):"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <EditText
+            android:id="@+id/ed_weight0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:enabled="false"
+            android:inputType="number"
+            android:text="0" />
+
+        <EditText
+            android:id="@+id/ed_ad0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:enabled="false"
+            android:inputType="numberSigned" />
+
+        <Button
+            android:id="@+id/btn_set_weight0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="标定当前点" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/TextView05"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="标定重量1 (?KG):"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <EditText
+            android:id="@+id/ed_weight1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="number"
+            android:text="1" />
+
+        <EditText
+            android:id="@+id/ed_ad1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:enabled="false"
+            android:inputType="numberSigned" />
+
+        <Button
+            android:id="@+id/btn_set_weight1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="标定当前点" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/TextView06"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="标定重量2 (?KG):"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <EditText
+            android:id="@+id/ed_weight2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="number"
+            android:text="10" />
+
+        <EditText
+            android:id="@+id/ed_ad2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:enabled="false"
+            android:inputType="numberSigned" />
+
+        <Button
+            android:id="@+id/btn_set_weight2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="标定当前点" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/TextView07"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="标定重量3 (?KG):"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <EditText
+            android:id="@+id/ed_weight3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="number"
+            android:text="15" />
+
+        <EditText
+            android:id="@+id/ed_ad3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:enabled="false"
+            android:inputType="numberSigned" />
+
+        <Button
+            android:id="@+id/btn_set_weight3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="标定当前点" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/TextView08"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="标定重量4 (?KG):"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <EditText
+            android:id="@+id/ed_weight4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="number"
+            android:text="30" />
+
+        <EditText
+            android:id="@+id/ed_ad4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:enabled="false"
+            android:inputType="numberSigned" />
+
+        <Button
+            android:id="@+id/btn_set_weight4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="标定当前点" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="分度值(g):"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <EditText
+            android:id="@+id/ed_precision"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="number"
+            android:text="1" >
+        </EditText>
+
+    </LinearLayout>
+
+
+    <include layout="@layout/davide_horizontal_line" />
+</LinearLayout>

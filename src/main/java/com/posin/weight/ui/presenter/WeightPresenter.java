@@ -126,6 +126,15 @@ public class WeightPresenter implements WeightContract.IWeightPresenter {
         iWeight.setTare();
     }
 
+    /**
+     * 获取IScaleService服务
+     *
+     * @return IScaleService
+     */
+    public IScaleService getIScaleService() {
+        return iWeight;
+    }
+
     private void doUpdateWeight() throws Exception {
         if (iWeight == null) {
             throw new Exception("IScaleService services is null, please bindService");

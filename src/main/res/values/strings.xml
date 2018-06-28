@@ -22,5 +22,6 @@
     <string name="total_money">Total(dollar)</string>
     <string name="pay_up_money">PayUp(dollar)</string>
     <string name="pay_change_money">Change(dollar)</string>
+    <string name="pay_sum_default">$0.0</string>
 
 </resources>

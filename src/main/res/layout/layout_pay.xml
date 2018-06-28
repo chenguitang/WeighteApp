@@ -24,7 +24,7 @@
         android:layout_marginEnd="15dp"
         android:layout_marginStart="15dp"
         android:gravity="center_vertical"
-        android:text="￥ 442.15"
+        android:text="@string/pay_sum_default"
         android:textColor="@color/white"
         android:textSize="20sp" />
 

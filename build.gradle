@@ -8,8 +8,8 @@ android {
         minSdkVersion 19
         //noinspection OldTargetApi
         targetSdkVersion 24
-        versionCode 8
-        versionName "Weight_Beat_1.0.8"
+        versionCode 9
+        versionName "Weight_Beat_1.0.9"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -37,7 +37,7 @@ dependencies {
     /*cardview*/
     compile 'com.android.support:cardview-v7:25.3.1'
     /*RecyclerViewAdapter*/
-    compile project(':cyrvadapter')
     compile files('libs/posindev.jar')
     provided files('libs/framework-android44.jar')
+    compile files('libs/cyrvadapter.jar')
 }

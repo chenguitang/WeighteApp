@@ -1,25 +1,19 @@
 package com.posin.weight.ui.activity;
 
-import android.content.Intent;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,16 +37,14 @@ import com.posin.weight.ui.presenter.WeightPresenter;
 import com.posin.weight.utils.DoubleUtil;
 import com.posin.weight.utils.LanguageUtils;
 import com.posin.weight.utils.StringUtils;
-import com.posin.weight.utils.ThreadManage;
 import com.posin.weight.view.PayDialog;
+import com.posin.weight.view.SetWeightPointDialog;
 import com.posin.weight.view.WeightDialog;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -65,7 +57,7 @@ import butterknife.OnClick;
  */
 public class MainActivity extends BaseActivity implements WeightContract.IWeightView,
         WeightDialog.WeightDialogView, RvFoodTypeDetailAdapter.RvFoodTypeDetailView,
-        RvFoodTypeAdapter.RvFoodTypeView, PayDialog.IPayView, RvMenuDetailAdapter.RvMenuDetailView {
+        RvFoodTypeAdapter.RvFoodTypeView, PayDialog.IPayView, RvMenuDetailAdapter.RvMenuDetailView, View.OnTouchListener {
 
     @BindView(R.id.common_toolbar)
     Toolbar commonToolbar;
@@ -127,7 +119,8 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
     private long mSecShowOthersTime;
 
     private boolean mLcdShowInit = true;
-
+    private boolean mPressed = false;
+    private long mDownTime = 0;
 
     private double mSum;
     private boolean isZh = true;
@@ -151,10 +144,9 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
         isZh = LanguageUtils.isZh(this);
         isLcd = SecDisplayUtils.getInstance().isLcd();
         mWeightPresenter = new WeightPresenter(this, this, mHandler);
-        initMenuDetail();
-        initFoodType();
-        initFoodDetail();
+        initAdapter();
 
+        commonToolbar.setOnTouchListener(this);
     }
 
     @Override
@@ -168,35 +160,24 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
     }
 
     /**
-     * 菜品明细（某一个类型的菜品所有种类）
+     * 初始化各种Adapter适配器
      */
-    private void initFoodDetail() {
+    private void initAdapter() {
+        //菜品明细（某一个类型的菜品所有种类）
         foodList = FoodTypeDetailData.getFoodTypeDetail(isZh ? "水果" : "Fruits");
         rvFoodTypeDetailAdapter = new RvFoodTypeDetailAdapter(foodList, this, isZh);
         grvFoodDetail.setAdapter(rvFoodTypeDetailAdapter, 3, false, false);
-    }
-
-    /**
-     * 菜品种类使用方法
-     */
-    private void initFoodType() {
+        //菜品种类使用方法
         rvFoodTypeAdapter = new RvFoodTypeAdapter(FoodTypeData.getFoodTypes(isZh), this);
-
         rvFoodTypeAdapter.setSelectedPosition(0);
         hrvFoodType.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL));
         hrvFoodType.setAdapter(rvFoodTypeAdapter);
-    }
-
-    /**
-     * 菜单明细使用方法
-     */
-    private void initMenuDetail() {
+        //菜单明细使用方法
         menuDetailList = new ArrayList<>();
         rvMenuDetailAdapter = new RvMenuDetailAdapter(menuDetailList, this, isZh);
         vrvMenu.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         vrvMenu.setAdapter(rvMenuDetailAdapter);
     }
-
 
     /**
      * 点击选择具体某个商品
@@ -267,7 +248,7 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
                 int position = rvMenuDetailAdapter.getSelectedPosition();
                 if (position >= 0) {
                     mSum = DoubleUtil.sub(mSum, menuDetailList.get(position).getSubtotal());
-                    tvPay.setText(StringUtils.append("￥" + mSum));
+                    tvPay.setText(StringUtils.append((isZh ? "￥" : "$") + mSum));
                     menuDetailList.remove(position);
                 }
                 rvMenuDetailAdapter.setList_bean(menuDetailList);
@@ -337,6 +318,7 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
     public void initToolBar() {
         mCommonToolbar.setLogo(R.mipmap.scalen);
         mCommonToolbar.setTitle(R.string.app_name);
+
     }
 
     /**
@@ -514,7 +496,7 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
 
         //修改总金额
         mSum = DoubleUtil.add(mSum, menuDetail.getSubtotal());
-        tvPay.setText(StringUtils.append("￥" + mSum));
+        tvPay.setText(StringUtils.append((isZh ? "￥" : "$") + mSum));
 
         //增加菜品到菜单栏
         menuDetailList.add(menuDetail);
@@ -618,4 +600,28 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
         }
     }
 
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        switch (v.getId()) {
+            case R.id.common_toolbar:
+                if (MotionEvent.ACTION_DOWN == event.getAction()) {
+                    Log.d(TAG, "************* pressed");
+                    if (!mPressed) {
+                        mPressed = true;
+                        mDownTime = SystemClock.uptimeMillis();
+                    }
+                } else if (MotionEvent.ACTION_UP == event.getAction()) {
+                    Log.d(TAG, "************* release");
+                    if (mPressed) {
+                        mPressed = false;
+                        long interval = SystemClock.uptimeMillis() - mDownTime;
+                        Log.d(TAG, "interval time: " + interval);
+                        if (interval > 5000 && interval < 10000) {
+                            new SetWeightPointDialog(MainActivity.this, mWeightPresenter);
+                        }
+                    }
+                }
+        }
+        return false;
+    }
 }

@@ -110,7 +110,6 @@ public class SecDisplayUtils implements ICustomerDisplay {
     @Override
     public void displayLedPrice(String value) throws IOException {
         if (!isLcd()) {
-            mLcdCustomerDisplay.setCursorPos(2, 0);
             mLedCustomerDisplay.displayPrice(value);
         }
     }

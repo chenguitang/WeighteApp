@@ -1,11 +1,15 @@
 package com.posin.weight.ui.adapter;
 
+import android.util.Log;
+
 import com.cy.cyrvadapter.adapter.RVAdapter;
 import com.posin.weight.R;
 import com.posin.weight.been.Food;
 import com.posin.weight.view.FoodCardView;
 
 import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * FileName: RvFoodTypeDetailAdapter
@@ -15,13 +19,18 @@ import java.util.List;
  */
 public class RvFoodTypeDetailAdapter extends RVAdapter<Food> {
 
+    private static final String TAG = "RvFoodTypeDetailAdapter";
     private RvFoodTypeDetailView mRvFoodTypeDetailView;
     private boolean mIsZh;
 
-    public RvFoodTypeDetailAdapter(List<Food> list_bean, RvFoodTypeDetailView rvFoodTypeDetailView, boolean iszh) {
+    public RvFoodTypeDetailAdapter(List<Food> list_bean, RvFoodTypeDetailView rvFoodTypeDetailView, boolean isZh) {
         super(list_bean);
         this.mRvFoodTypeDetailView = rvFoodTypeDetailView;
-        this.mIsZh = iszh;
+        this.mIsZh = isZh;
+
+        for (Food food : list_bean) {
+            Log.e(TAG, "food: " + food.toString());
+        }
     }
 
     @Override
@@ -39,6 +48,8 @@ public class RvFoodTypeDetailAdapter extends RVAdapter<Food> {
 
     @Override
     public void onItemClick(int position, Food bean) {
+        Log.d(TAG, "Food detail: " + bean.toString());
+
         mRvFoodTypeDetailView.onTypeDetailItemClick(position, bean);
     }
 

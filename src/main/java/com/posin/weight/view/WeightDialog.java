@@ -1,36 +1,24 @@
 package com.posin.weight.view;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.lcodecore.tkrefreshlayout.utils.DensityUtil;
 import com.posin.weight.R;
 import com.posin.weight.base.BaseDialog;
 import com.posin.weight.been.MenuDetail;
-import com.posin.weight.module.secondary.SecDisplayUtils;
 import com.posin.weight.ui.presenter.WeightPresenter;
 import com.posin.weight.utils.DensityUtils;
 import com.posin.weight.utils.DoubleUtil;
 import com.posin.weight.utils.LanguageUtils;
 import com.posin.weight.utils.StringUtils;
-import com.posin.weight.utils.ThreadManage;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * FileName: WeightDialog
@@ -112,9 +100,15 @@ public class WeightDialog extends BaseDialog {
         tvGetWeightPrinces.setText(isZh ? StringUtils.append(mPrices, " 元") :
                 StringUtils.append("$", mPrices));
 
-
-        //获取实时重量值，并更新重量
-        // mHandler.sendEmptyMessage(CODE_GET_AND_UPDATE_WEIGHT);
+        try {
+            mWeight = mWeightPresenter.getWeight();
+            mSubtotal = DoubleUtil.round(mWeight * mPrices, 2);
+            tvGetWeightWeight.setText(String.format("%.3f KG", mWeight));
+            tvGetWeightMoney.setText(isZh ? StringUtils.append(mSubtotal, " 元") :
+                    StringUtils.append("$", mSubtotal));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
