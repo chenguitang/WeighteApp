@@ -235,8 +235,14 @@ public class PayDialog extends BaseDialog implements View.OnLongClickListener, T
                 mPayUp = StringUtils.append(mPayUp, keyboard);
                 etPayUp.setText(mPayUp);
             } else {
-                Toast.makeText(mContext, "实收金额最多为" + MAX_PAY_UP_SIZE + "个字符...",
-                        Toast.LENGTH_SHORT).show();
+                if (LanguageUtils.isZh(mContext)) {
+                    Toast.makeText(mContext, "" + MAX_PAY_UP_SIZE + "个字符...",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(mContext, "The maximum amount is " +
+                            MAX_PAY_UP_SIZE + " characters...",
+                            Toast.LENGTH_SHORT).show();
+                }
             }
         } else {
             etPayUp.setText(keyboard);

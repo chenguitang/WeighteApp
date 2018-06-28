@@ -214,7 +214,7 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
                 SecDisplayUtils.getInstance().displayLcdPrice(
                         String.valueOf(food.getName())
                         , String.valueOf(food.getPrices())
-                        , String.valueOf(String.format("%.3f", weight))
+                        , String.format("%.3f", weight)
                         , String.valueOf(DoubleUtil.round(weight * food.getPrices(), 2))
                 );
             } catch (Exception e) {
@@ -247,9 +247,9 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
         //更新客显显示的商品数据
         try {
             if (isLcd) {
-                SecDisplayUtils.getInstance().displayUpdateFood(menuDetail.getName(),
-                        String.valueOf(menuDetail.getPrices()),
-                        String.valueOf(menuDetail.getSubtotal()));
+//                SecDisplayUtils.getInstance().displayUpdateFood(menuDetail.getName(),
+//                        String.valueOf(menuDetail.getPrices()),
+//                        String.valueOf(menuDetail.getSubtotal()));
             } else {
                 mSecShowOthersTime = System.currentTimeMillis();
                 SecDisplayUtils.getInstance().displayLedPrice(String.valueOf(menuDetail.getPrices()));
@@ -283,17 +283,8 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
                 //更新客显
                 try {
                     if (isLcd) {
-                        if (rvMenuDetailAdapter.getItemCount() > 0) {
-                            int selectedPosition = rvMenuDetailAdapter.getSelectedPosition();
-                            MenuDetail menuDetail = menuDetailList.get(selectedPosition);
-
-                            SecDisplayUtils.getInstance().displayUpdateFood(menuDetail.getName(),
-                                    String.valueOf(menuDetail.getPrices()),
-                                    String.valueOf(menuDetail.getSubtotal()));
-                        } else {
-                            SecDisplayUtils.getInstance().displayUpdateFood(isZh ? "欢迎光临" :
-                                    "Welcome", "0.00", "0.00");
-                        }
+                        SecDisplayUtils.getInstance().displayUpdateFood(isZh ? "欢迎光临" :
+                                "Welcome", "0.00", "0.00");
                     } else {
                         SecDisplayUtils.getInstance().displayTotal(String.valueOf(mSum));
                         mSecShowOthersTime = System.currentTimeMillis();
@@ -543,16 +534,7 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
             }
             mPayDialog = null;
         }
-        int selectedPosition = rvMenuDetailAdapter.getSelectedPosition();
-        MenuDetail menuDetail = menuDetailList.get(selectedPosition);
-        try {
-            SecDisplayUtils.getInstance().displayLcdPrice(menuDetail.getName(),
-                    String.valueOf(menuDetail.getPrices()),
-                    String.format("%.3f", mWeightPresenter.getWeight()),
-                    String.valueOf(menuDetail.getSubtotal()));
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
+        mLcdShowInit = true;
     }
 
     @Override
@@ -564,7 +546,7 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
             mPayDialog = null;
         }
         mLcdShowInit = true;
-        tvPay.setText("￥0.0");
+        tvPay.setText(isZh ? "￥0.0" : "$0.0");
 
         try {
             PrinterUtils.getInstance().printMenuDetail(menuDetailList, mSum,
