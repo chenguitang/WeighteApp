@@ -493,17 +493,8 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
 
         try {
             if (isLcd) {
-                if (rvMenuDetailAdapter.getItemCount() > 0) {
-                    int selectedPosition = rvMenuDetailAdapter.getSelectedPosition();
-                    MenuDetail menuDetail = menuDetailList.get(selectedPosition);
-
-                    SecDisplayUtils.getInstance().displayUpdateFood(menuDetail.getName(),
-                            String.valueOf(menuDetail.getPrices()),
-                            String.valueOf(menuDetail.getSubtotal()));
-                } else {
-                    SecDisplayUtils.getInstance().displayUpdateFood(isZh ? "欢迎光临" :
-                            "Welcome", "0.00", "0.00");
-                }
+                SecDisplayUtils.getInstance().displayUpdateFood(isZh ? "欢迎光临" :
+                        "Welcome", "0.00", "0.00");
             }
         } catch (Throwable e) {
             e.printStackTrace();
