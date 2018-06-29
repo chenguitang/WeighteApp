@@ -11,6 +11,7 @@ import com.posin.weight.been.Weight;
 import com.posin.weight.module.weight.ErrorCode;
 import com.posin.weight.module.weight.WeightUtils;
 import com.posin.weight.ui.contract.WeightContract;
+import com.posin.weight.utils.StringUtils;
 
 /**
  * FileName: WeightPresenter
@@ -135,6 +136,11 @@ public class WeightPresenter implements WeightContract.IWeightPresenter {
         return iWeight;
     }
 
+    /**
+     * 更新重量
+     *
+     * @throws Exception
+     */
     private void doUpdateWeight() throws Exception {
         if (iWeight == null) {
             throw new Exception("IScaleService services is null, please bindService");
@@ -147,18 +153,30 @@ public class WeightPresenter implements WeightContract.IWeightPresenter {
         } else {
             mWeight = WeightUtils.getWeight(iWeight);
 
-            //重量
-            mWeightView.updateWeight(mWeight.getNetWeight());
+            if (mWeight.getOverLoadMark() != 0) { //过载
+                mWeightView.overLoadMark();
+            } else if (mWeight.getOpenZeroHighMark() != 0) {  //零点高
+                mWeightView.openZeroHighMark();
+            } else if (mWeight.getOpenZeroLowMark() != 0) {  //零点低
+                mWeightView.openZeroLowMark();
+            } else {
+                int pointNumber = mWeight.getPointnumber();
+                if (pointNumber == 1 || pointNumber == 3) {
+                    //重量
+                    mWeightView.updateWeight(mWeight.getNetWeight());
+                } else {
+                    mWeightView.weightError(StringUtils.append("小数位不正确 ", pointNumber));
+                }
 
-            //是否稳定
-            mWeightView.isStable(mWeight.getSteadyMark() > 0);
+                //是否稳定
+                mWeightView.isStable(mWeight.getSteadyMark() > 0);
 
-            //是否零位
-            mWeightView.isZero(mWeight.getZeroMark() > 0);
+                //是否零位
+                mWeightView.isZero(mWeight.getZeroMark() > 0);
 
-            //是否去皮
-            mWeightView.isPeel(mWeight.getTareMark() > 0);
-
+                //是否去皮
+                mWeightView.isPeel(mWeight.getTareMark() > 0);
+            }
         }
     }
 

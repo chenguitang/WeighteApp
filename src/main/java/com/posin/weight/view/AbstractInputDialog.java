@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.view.View;
 import android.widget.Button;
 
+import com.posin.weight.R;
+
 /**
  * FileName: AbstractInputDialog
  * Author: Greetty
@@ -18,10 +20,6 @@ public abstract class AbstractInputDialog {
     protected final AlertDialog mDlg;
     protected final View mView;
 
-    protected final Button mBtnOk;
-
-    protected abstract void onOk();
-
     protected abstract View createView(Context context);
 
     public AbstractInputDialog(Context context, String title) {
@@ -30,15 +28,7 @@ public abstract class AbstractInputDialog {
         mDlg = (new AlertDialog.Builder(context))
                 .setTitle(title)
                 .setView(mView)
-                .setInverseBackgroundForced(true)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        onOk();
-                    }
-                })
-                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -47,6 +37,5 @@ public abstract class AbstractInputDialog {
                 .show();
 
             mDlg.setCanceledOnTouchOutside(false);
-        mBtnOk = mDlg.getButton(AlertDialog.BUTTON_POSITIVE);
     }
 }

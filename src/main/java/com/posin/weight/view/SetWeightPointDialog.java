@@ -10,17 +10,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.posin.svr.IScaleService;
 import com.posin.weight.R;
 import com.posin.weight.been.Weight;
-import com.posin.weight.module.weight.ErrorCode;
 import com.posin.weight.ui.presenter.WeightPresenter;
 
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * FileName: SetWeightPointDialog
@@ -33,18 +34,20 @@ public class SetWeightPointDialog extends AbstractInputDialog {
 
     private static final String TAG = "SetWeightPointDialog";
     private static final int MAX_WEIGHT_COUNT = 5;
-    private static final HashMap<Integer, Integer> mWeightMap = new HashMap<Integer, Integer>();
 
     private EditText mAdValue;
     private EditText mMaxWeight;
-    private AdWeightItem[] mWeight;
+    private AdWeightItem[] mWeightItems;
     private EditText mPrecision;
     private EditText mWeightValue;
+    private CheckBox mAutoPrecision;
+    private Button mBtnSave;
 
     private Handler mHandler = new Handler();
     private static IScaleService iWeight;
     private Context mContext;
     private WeightPresenter mWeightPresenter;
+
 
     private Runnable mUpdateAd = new Runnable() {
         @Override
@@ -73,6 +76,7 @@ public class SetWeightPointDialog extends AbstractInputDialog {
         this.iWeight = weightPresenter.getIScaleService();
         this.mWeightPresenter = weightPresenter;
         init();
+
         mDlg.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface arg0) {
@@ -84,9 +88,94 @@ public class SetWeightPointDialog extends AbstractInputDialog {
             mHandler.postDelayed(mUpdateAd, 500);
     }
 
-    @Override
-    protected void onOk() {
+
+    class AdWeightItem {
+        public final int mIndex;
+        public int mWeight;
+        public int mAd = 0;
+        public final EditText mEdWeight;
+        public final EditText mEdAd;
+        public final Button mBtnSetWeight;
+
+        public void clear() {
+            mAd = 0;
+            mEdAd.getText().clear();
+            mEdWeight.setEnabled(false);
+            mBtnSetWeight.setEnabled(mWeight == 0);
+        }
+
+        public void enable() {
+            mBtnSetWeight.setEnabled(true);
+            mEdWeight.setEnabled(true);
+        }
+
+        public AdWeightItem(int index, int weight, int ed_weight, int ed_ad, int btn, View v) {
+            mIndex = index;
+            mWeight = weight;
+            mEdWeight = (EditText) v.findViewById(ed_weight);
+            mEdAd = (EditText) v.findViewById(ed_ad);
+            mBtnSetWeight = (Button) v.findViewById(btn);
+            mBtnSetWeight.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onButtonClick();
+                }
+            });
+            clear();
+        }
+
+        public void onButtonClick() {
+            if (iWeight == null)
+                return;
+
+            if (mWeight == 0) {
+                // 标定零点，清空之前标定的数据
+                for (int i = 0; i < mWeightItems.length; i++)
+                    mWeightItems[i].clear();
+                mBtnSave.setEnabled(false);
+            }
+
+            try {
+                mWeight = Integer.parseInt(mEdWeight.getText().toString());
+            } catch (Throwable e) {
+                e.printStackTrace();
+                Toast.makeText(mContext, "标定重量值不正确，请重新输入!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (mIndex != 0) {
+                if (mWeight <= mWeightItems[mIndex - 1].mWeight) {
+                    Toast.makeText(mContext, "错误: 标定重量值不能比前一个值小!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+
+            try {
+                int ad = iWeight.getSteadyAd(2000);
+                if (ad <= 0) {
+                    Toast.makeText(mContext, "无法获取稳定值，请重试!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                mAd = ad;
+                mEdAd.setText(String.valueOf(mAd));
+
+                if (mIndex < MAX_WEIGHT_COUNT - 1)
+                    mWeightItems[mIndex + 1].enable();
+
+                if (mWeight > 0)
+                    mBtnSave.setEnabled(true);
+
+                Log.d(TAG, "set weight " + mWeight + ", ad " + mAd);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+                Toast.makeText(mBtnSetWeight.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }
     }
+
+    ;
+
 
     @Override
     protected View createView(Context context) {
@@ -97,23 +186,23 @@ public class SetWeightPointDialog extends AbstractInputDialog {
         mMaxWeight = (EditText) v.findViewById(R.id.ed_max_weight);
         mPrecision = (EditText) v.findViewById(R.id.ed_precision);
         mWeightValue = (EditText) v.findViewById(R.id.ed_weight);
+        mAutoPrecision = (CheckBox) v.findViewById(R.id.cb_auto_precision);
 
-        mWeight = new AdWeightItem[MAX_WEIGHT_COUNT];
-        mWeight[4] = new AdWeightItem(30, R.id.ed_weight4, R.id.ed_ad4, R.id.btn_set_weight4, v, null);
-        mWeight[3] = new AdWeightItem(15, R.id.ed_weight3, R.id.ed_ad3, R.id.btn_set_weight3, v, mWeight[4]);
-        mWeight[2] = new AdWeightItem(10, R.id.ed_weight2, R.id.ed_ad2, R.id.btn_set_weight2, v, mWeight[3]);
-        mWeight[1] = new AdWeightItem(1, R.id.ed_weight1, R.id.ed_ad1, R.id.btn_set_weight1, v, mWeight[2]);
-        mWeight[0] = new AdWeightItem(0, R.id.ed_weight0, R.id.ed_ad0, R.id.btn_set_weight0, v, mWeight[1]);
+        mWeightItems = new AdWeightItem[MAX_WEIGHT_COUNT];
+        mWeightItems[4] = new AdWeightItem(4, 30, R.id.ed_weight4, R.id.ed_ad4, R.id.btn_set_weight4, v);
+        mWeightItems[3] = new AdWeightItem(3, 15, R.id.ed_weight3, R.id.ed_ad3, R.id.btn_set_weight3, v);
+        mWeightItems[2] = new AdWeightItem(2, 10, R.id.ed_weight2, R.id.ed_ad2, R.id.btn_set_weight2, v);
+        mWeightItems[1] = new AdWeightItem(1, 1, R.id.ed_weight1, R.id.ed_ad1, R.id.btn_set_weight1, v);
+        mWeightItems[0] = new AdWeightItem(0, 0, R.id.ed_weight0, R.id.ed_ad0, R.id.btn_set_weight0, v);
 
-        mWeight[0].mSetWeight.setEnabled(true);
+        mWeightItems[0].mBtnSetWeight.setEnabled(true);
 
-        Button btn;
-
-        btn = (Button) v.findViewById(R.id.btn_save_config);
-        btn.setOnClickListener(new View.OnClickListener() {
+        mBtnSave = (Button) v.findViewById(R.id.btn_save_config);
+        mBtnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int count = mWeightMap.size();
+                int[] weightMap = getWeightMapArray();
+                int count = weightMap != null ? weightMap.length / 2 : 0;
                 if (count < 2) {
                     Toast.makeText(mContext, "标定数量不足，不能保存", Toast.LENGTH_SHORT).show();
                     return;
@@ -121,8 +210,12 @@ public class SetWeightPointDialog extends AbstractInputDialog {
                 if (iWeight != null) {
                     try {
                         int p = Integer.valueOf(mPrecision.getText().toString());
-                        iWeight.setPrecision(p);
-                        if (iWeight.setWeightMap(getWeightMapArray())) {
+                        boolean autop = mAutoPrecision.isChecked();
+                        Log.d(TAG, "p=" + p + ", autop=" + autop + ", count=" + count);
+                        for (int i = 0; i < count; i++) {
+                            Log.d(TAG, "W=" + weightMap[i * 2] + ", AD=" + weightMap[i * 2 + 1]);
+                        }
+                        if (iWeight.setWeightConfig(weightMap, p, autop)) {
                             showMsg("成功", "保存标定数据成功!");
                         } else {
                             showError("保存标定数据失败. 请重试!");
@@ -135,121 +228,90 @@ public class SetWeightPointDialog extends AbstractInputDialog {
             }
         });
 
+        mAutoPrecision.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton v, boolean checked) {
+                mPrecision.setEnabled(!checked);
+            }
+        });
+
         return v;
     }
 
     private void init() {
-        if (iWeight == null)
-            return;
 
-        int ec;
         try {
-            ec = iWeight.getErrorCode();
-            if (ec != ErrorCode.ERR_OK && ec != ErrorCode.ERR_NO_WEIGHT_TABLE) {
-                mBtnOk.setEnabled(false);
-                //return;
-            }
-            //else {
-            {
-                Weight w;
-                try {
-                    w = mWeightPresenter.getWeightInstance();
+            mBtnSave.setEnabled(false);
 
-                    mMaxWeight.setText(String.valueOf(w.getMaxRange() / 1000));
-                    mPrecision.setText(String.valueOf(w.getMinDivision()));
+            Weight w;
 
-                    int[] wmap = iWeight.getWeightMap();
-                    if (wmap != null) {
-                        int count = wmap.length / 2;
-                        for (int i = 0; i < count && i < MAX_WEIGHT_COUNT; i++) {
-                            int weight = wmap[i * 2];
-                            int ad = wmap[i * 2 + 1];
-                            Log.d(TAG, "load table item " + i + " : " + weight + ", " + ad);
-                            mWeight[i].mWeight = weight;
-                            mWeight[i].mAd = ad;
-                            mWeight[i].mSetWeight.setEnabled(true);
-                            mWeight[i].mEdWeight.setText(String.valueOf(weight));
-                            mWeight[i].mEdAd.setText(String.valueOf(ad));
-                            if (i < MAX_WEIGHT_COUNT - 1) {
-                                mWeight[i + 1].mSetWeight.setEnabled(true);
-                            }
-                        }
-                    } else {
-                        Log.e(TAG, "no weight table");
+            w = mWeightPresenter.getWeightInstance();
+
+            int pointnumber = w.getPointnumber();
+            if (pointnumber == 1)
+                mMaxWeight.setText(String.valueOf(w.getMaxRange()));
+            else if (pointnumber == 3)
+                mMaxWeight.setText(String.valueOf(w.getMaxRange() / 1000));
+            else
+                mMaxWeight.setText("错误");
+
+            //mPrecision.setText(String.valueOf(w.getMinDivision())); // 如果是自动选择模式，getMinDivision()是自动生成的值，不是用户设定的值
+            mPrecision.setText(String.valueOf(iWeight.getPrecision()));
+            boolean autoPrecision = iWeight.getAutoPrecision();
+            mAutoPrecision.setChecked(autoPrecision);
+            mPrecision.setEnabled(!autoPrecision);
+
+            //mWeightMap.clear();
+
+            int[] wmap = iWeight.getWeightMap();
+            if (wmap != null) {
+                int count = wmap.length / 2;
+                for (int i = 0; i < count && i < MAX_WEIGHT_COUNT; i++) {
+                    int weight = wmap[i * 2];
+                    int ad = wmap[i * 2 + 1];
+                    Log.d(TAG, "load table item " + i + " : " + weight + ", " + ad);
+                    //mWeightMap.put(weight, ad);
+                    mWeightItems[i].mWeight = weight;
+                    mWeightItems[i].mAd = ad;
+                    mWeightItems[i].mBtnSetWeight.setEnabled(true);
+                    mWeightItems[i].mEdWeight.setText(String.valueOf(weight));
+                    mWeightItems[i].mEdAd.setText(String.valueOf(ad));
+                    if (i < MAX_WEIGHT_COUNT - 1) {
+                        mWeightItems[i + 1].mBtnSetWeight.setEnabled(true);
                     }
-
-                } catch (Throwable e) {
-                    e.printStackTrace();
-                    Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
+                if (count >= 2)
+                    mBtnSave.setEnabled(true);
+            } else {
+                Log.e(TAG, "no weight table");
             }
-        } catch (RemoteException e1) {
+
+        } catch (Exception e1) {
             e1.printStackTrace();
             Toast.makeText(mContext, e1.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
-
-    private static class AdWeightItem {
-        public int mWeight;
-        public int mAd = 0;
-        public EditText mEdWeight;
-        public EditText mEdAd;
-        public Button mSetWeight;
-
-        public AdWeightItem mNext;
-
-        public AdWeightItem(int weight, int ed_weight, int ed_ad, int btn, View v, AdWeightItem next) {
-            mWeight = weight;
-            mEdWeight = (EditText) v.findViewById(ed_weight);
-            mEdAd = (EditText) v.findViewById(ed_ad);
-            mSetWeight = (Button) v.findViewById(btn);
-            mSetWeight.setEnabled(false);
-            mNext = next;
-
-            mSetWeight.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View arg0) {
-                    if (iWeight != null) {
-                        try {
-                            mWeight = Integer.parseInt(mEdWeight.getText().toString());
-                            if (mWeight == 0) {
-                                mWeightMap.clear();
-                                mAd = iWeight.getCurrentAd();
-                            } else {
-                                mAd = iWeight.getCurrentAd();
-                            }
-
-                            mWeightMap.put(mWeight, mAd);
-
-                            if (mNext != null) {
-                                mNext.mSetWeight.setEnabled(true);
-                                mNext.mEdWeight.setEnabled(true);
-                            }
-                            mEdAd.setText(String.valueOf(mAd));
-                            Log.d(TAG, "set weight " + mWeight + ", ad " + mAd);
-                        } catch (RemoteException e) {
-                            e.printStackTrace();
-                            Toast.makeText(mSetWeight.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }
-            });
-        }
-    }
-
     private int[] getWeightMapArray() {
-        int count = mWeightMap.size();
-        if(count > 0) {
-            int[] map = new int[count*2];
-            int index = 0;
-            for(Map.Entry<Integer,Integer> i : mWeightMap.entrySet()) {
-                map[index*2] = i.getKey();
-                map[index*2+1] = i.getValue();
+        int count = 0;
+        for (int i = 0; i < MAX_WEIGHT_COUNT; i++) {
+            AdWeightItem wi = mWeightItems[i];
+            if (wi.mAd > 0) {
+                count++;
+            } else {
+                break;
             }
-            return map;
         }
-        return null;
+        if (count == 0)
+            return null;
+
+        int[] result = new int[count * 2];
+        for (int i = 0; i < count; i++) {
+            AdWeightItem wi = mWeightItems[i];
+            result[i * 2] = wi.mWeight;
+            result[i * 2 + 1] = wi.mAd;
+        }
+        return result;
     }
 
     // 显示错误, 并关闭Activity

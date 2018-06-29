@@ -43,63 +43,6 @@
         android:layout_height="wrap_content" >
 
         <TextView
-            android:id="@+id/TextView03"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:text="T值: "
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <EditText
-            android:id="@+id/ed_temp_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:enabled="false"
-            android:inputType="number"
-            android:text="0" />
-
-        <TextView
-            android:id="@+id/TextView09"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:text="S值: "
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <EditText
-            android:id="@+id/ed_temp_std"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:enabled="false"
-            android:inputType="number"
-            android:text="0" />
-
-    </LinearLayout>
-
-        <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <TextView
-            android:id="@+id/TextView11"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:text="Z值: "
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <EditText
-            android:id="@+id/ed_temp_zero"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:enabled="false"
-            android:inputType="number"
-            android:text="0" />
-
-        <TextView
             android:id="@+id/TextView10"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
@@ -115,9 +58,8 @@
             android:enabled="false"
             android:inputType="number"
             android:text="0" />
-
     </LinearLayout>
-    
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
@@ -234,7 +176,7 @@
             android:layout_weight="1"
             android:ems="10"
             android:inputType="number"
-            android:text="10" />
+            android:text="5" />
 
         <EditText
             android:id="@+id/ed_ad2"
@@ -322,10 +264,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="标定当前点" />
+
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_marginBottom="3dp"
         android:layout_height="wrap_content" >
 
         <TextView
@@ -342,11 +286,16 @@
             android:layout_weight="1"
             android:ems="10"
             android:inputType="number"
-            android:text="1" >
-        </EditText>
+            android:text="1" />
 
+        <CheckBox
+            android:id="@+id/cb_auto_precision"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="自动选择分度值" />
     </LinearLayout>
 
+    <include layout="@layout/davide_horizontal_line"/>
 
-    <include layout="@layout/davide_horizontal_line" />
 </LinearLayout>

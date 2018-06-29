@@ -390,6 +390,21 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
     }
 
     @Override
+    public void overLoadMark() {
+        tvWeight.setText(isZh?"过载":"Overload");
+    }
+
+    @Override
+    public void openZeroHighMark() {
+        tvWeight.setText(isZh?"零点高":"Zero point high");
+    }
+
+    @Override
+    public void openZeroLowMark() {
+        tvWeight.setText(isZh?"零点低":"Zero point low");
+    }
+
+    @Override
     public void updateWeight(float weight) {
         //修改显示重量
         float weightFloat = weight / 1000.0f;
@@ -618,6 +633,11 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
                         long interval = SystemClock.uptimeMillis() - mDownTime;
                         Log.d(TAG, "interval time: " + interval);
                         if (interval > 5000 && interval < 10000) {
+                            if (mWeightPresenter.getIScaleService() == null) {
+                                Toast.makeText(MainActivity.this, "错误: 无法连接称重服务程序",
+                                        Toast.LENGTH_SHORT).show();
+                                return false;
+                            }
                             new SetWeightPointDialog(MainActivity.this, mWeightPresenter);
                         }
                     }

@@ -21,6 +21,21 @@ public interface WeightContract {
         void weightError(String errorMessage);
 
         /**
+         * 过载
+         */
+        void overLoadMark();
+
+        /**
+         * 零点高
+         */
+        void openZeroHighMark();
+
+        /**
+         * 零点低
+         */
+        void openZeroLowMark();
+
+        /**
          * 显示秤重量
          *
          * @param weight float
@@ -48,6 +63,7 @@ public interface WeightContract {
          */
         void isZero(boolean Zero);
 
+
         /**
          * 显示程序异常
          *
@@ -59,7 +75,6 @@ public interface WeightContract {
     interface IWeightPresenter extends BaseContract.BasePresenter {
         /**
          * 连接秤服务
-         *
          */
         void bindService() throws Exception;
 
@@ -83,7 +98,7 @@ public interface WeightContract {
          *
          * @return Weight
          */
-        Weight getWeightInstance()  throws Exception;
+        Weight getWeightInstance() throws Exception;
 
         /**
          * 置零

@@ -38,12 +38,14 @@ interface IScaleService {
 
 	// 获取精度值
 	int getPrecision();
-	// 设置精度值
-	boolean setPrecision(int precision);
-
+	// 获取精度值
+	boolean getAutoPrecision();
 	// 获取校准表
 	int[] getWeightMap();
-	// 设置并保存校准表
-	boolean setWeightMap(in int[] map);
 
+	// 设置并保存校准表和精度值
+	boolean setWeightConfig(in int[] weightMap, int precision, boolean autoPrecision);
+
+	// 获取一个稳定的AD值，在timeout时间内完成，返回0为失败
+	int getSteadyAd(long timeout);
 }
