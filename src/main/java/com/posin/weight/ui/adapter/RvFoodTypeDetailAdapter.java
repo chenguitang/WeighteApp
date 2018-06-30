@@ -15,7 +15,7 @@ import static android.content.ContentValues.TAG;
  * FileName: RvFoodTypeDetailAdapter
  * Author: Greetty
  * Time: 2018/6/14 13:21
- * Desc: TODO
+ * Description: TODO
  */
 public class RvFoodTypeDetailAdapter extends RVAdapter<Food> {
 

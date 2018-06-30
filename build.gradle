@@ -8,8 +8,8 @@ android {
         minSdkVersion 19
         //noinspection OldTargetApi
         targetSdkVersion 24
-        versionCode 11
-        versionName "Weight_Beat_1.1.1"
+        versionCode 12
+        versionName "Scale_Beat_1.1.2"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

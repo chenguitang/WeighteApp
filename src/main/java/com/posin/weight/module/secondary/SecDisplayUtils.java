@@ -15,7 +15,7 @@ import java.util.Properties;
  * FileName: SecDisplayUtils
  * Author: Greetty
  * Time: 2018/6/14 14:54
- * Desc: 客显控制类
+ * Description: 客显控制类
  */
 public class SecDisplayUtils implements ICustomerDisplay {
 

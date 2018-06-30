@@ -11,7 +11,7 @@ import java.util.List;
  * FileName: RvFoodTypeAdapter
  * Author: Greetty
  * Time: 2018/6/14 13:06
- * Desc: TODO
+ * Description: TODO
  */
 public class RvFoodTypeAdapter extends RVAdapter<String> {
 

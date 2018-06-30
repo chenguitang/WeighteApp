@@ -10,7 +10,7 @@ import butterknife.ButterKnife;
  * FileName: BaseDialog
  * Author: Greetty
  * Time: 2018/6/21 18:21
- * Desc: TODO
+ * Description: TODO
  */
 public abstract class BaseDialog extends AlertDialog {
 

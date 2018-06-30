@@ -9,7 +9,7 @@ import java.util.List;
  * FileName: FoodTypeData
  * Author: Greetty
  * Time: 2018/6/14 13:42
- * Desc: TODO
+ * Description: TODO
  */
 public class FoodTypeData {
 

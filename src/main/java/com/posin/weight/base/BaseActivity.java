@@ -14,7 +14,7 @@ import butterknife.ButterKnife;
  * FileName: BaseActivity
  * Author: Greetty
  * Time: 2018/5/23 20:03
- * Desc: Activity基类
+ * Description: Activity基类
  */
 public abstract class BaseActivity extends AppCompatActivity {
 

@@ -12,7 +12,7 @@ import java.util.List;
  * FileName: RvMenuDetailAdapter
  * Author: Greetty
  * Time: 2018/6/14 11:10
- * Desc: TODO
+ * Description: TODO
  */
 public class RvMenuDetailAdapter extends RVAdapter<MenuDetail> {
 

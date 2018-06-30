@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
  * FileName: ThreadManage
  * Author: Greetty
  * Time: 2018/6/22 9:25
- * Desc: 提供三个线程池
+ * Description: 提供三个线程池
  */
 
 public class ThreadManage {

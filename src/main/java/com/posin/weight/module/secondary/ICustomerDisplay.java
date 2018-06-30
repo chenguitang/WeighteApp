@@ -7,7 +7,7 @@ import java.io.IOException;
  * FileName: ICustomerDisplay
  * Author: Greetty
  * Time: 2018/6/14 15:22
- * Desc: 客显操作接口
+ * Description: 客显操作接口
  */
 public interface ICustomerDisplay {
 

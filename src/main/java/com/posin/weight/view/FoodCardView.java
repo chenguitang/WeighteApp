@@ -21,7 +21,7 @@ import static com.posin.weight.R.id.tv_food_price;
  * FileName: FoodCardView
  * Author: Greetty
  * Time: 2018/6/12 19:27
- * Desc: TODO
+ * Description: TODO
  */
 public class FoodCardView extends RelativeLayout {
 

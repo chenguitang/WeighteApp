@@ -27,7 +27,7 @@ import java.util.HashMap;
  * FileName: SetWeightPointDialog
  * Author: Greetty
  * Time: 2018/6/28 13:45
- * Desc: TODO
+ * Description: TODO
  */
 
 public class SetWeightPointDialog extends AbstractInputDialog {

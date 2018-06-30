@@ -6,7 +6,7 @@ import java.text.DecimalFormat;
  * FileName: StringUtils
  * Author: Greetty
  * Time: 2018/6/14 15:48
- * Desc: TODO
+ * Description: TODO
  */
 public class StringUtils {
 

@@ -10,7 +10,7 @@ import com.posin.weight.been.Weight;
  * FileName: WeightUtils
  * Author: Greetty
  * Time: 2018/6/15 11:19
- * Desc: TODO
+ * Description: TODO
  */
 public class WeightUtils {
 

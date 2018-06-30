@@ -8,7 +8,7 @@ import android.support.multidex.MultiDex;
  * FileName: MyApplication
  * Author: Greetty
  * Time: 2018/5/23 20:06
- * Desc: TODO
+ * Description: TODO
  */
 public class MyApplication extends Application {
 

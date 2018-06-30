@@ -8,7 +8,7 @@ import java.util.Locale;
  * FileName: LanguageUtils
  * Author: Greetty
  * Time: 2018/6/25 13:29
- * Desc: TODO
+ * Description: TODO
  */
 public class LanguageUtils {
 

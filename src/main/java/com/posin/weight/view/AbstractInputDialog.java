@@ -12,7 +12,7 @@ import com.posin.weight.R;
  * FileName: AbstractInputDialog
  * Author: Greetty
  * Time: 2018/6/28 13:46
- * Desc: TODO
+ * Description: TODO
  */
 public abstract class AbstractInputDialog {
 

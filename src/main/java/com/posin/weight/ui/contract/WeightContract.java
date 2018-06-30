@@ -7,7 +7,7 @@ import com.posin.weight.been.Weight;
  * FileName: FoodTypeContract
  * Author: Greetty
  * Time: 2018/6/14 11:17
- * Desc: TODO
+ * Description: TODO
  */
 public interface WeightContract {
 

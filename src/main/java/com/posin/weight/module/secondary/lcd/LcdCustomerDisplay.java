@@ -9,7 +9,7 @@ import java.io.IOException;
  * FileName: LcdCustomerDisplay
  * Author: Greetty
  * Time: 2018/6/14 14:54
- * Desc: LCD客显
+ * Description: LCD客显
  */
 public class LcdCustomerDisplay {
 

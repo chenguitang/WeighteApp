@@ -17,7 +17,7 @@ import com.posin.weight.utils.StringUtils;
  * FileName: WeightPresenter
  * Author: Greetty
  * Time: 2018/6/15 14:31
- * Desc: TODO
+ * Description: TODO
  */
 public class WeightPresenter implements WeightContract.IWeightPresenter {
 

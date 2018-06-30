@@ -29,7 +29,7 @@ import butterknife.OnLongClick;
  * FileName: PayDialog
  * Author: Greetty
  * Time: 2018/6/22 15:43
- * Desc: TODO
+ * Description: TODO
  */
 public class PayDialog extends BaseDialog implements View.OnLongClickListener, TextWatcher {
 
@@ -236,11 +236,11 @@ public class PayDialog extends BaseDialog implements View.OnLongClickListener, T
                 etPayUp.setText(mPayUp);
             } else {
                 if (LanguageUtils.isZh(mContext)) {
-                    Toast.makeText(mContext, "" + MAX_PAY_UP_SIZE + "个字符...",
+                    Toast.makeText(mContext, "最大金额只能为" + MAX_PAY_UP_SIZE + "个字符...",
                             Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(mContext, "The maximum amount is " +
-                            MAX_PAY_UP_SIZE + " characters...",
+                                    MAX_PAY_UP_SIZE + " characters...",
                             Toast.LENGTH_SHORT).show();
                 }
             }

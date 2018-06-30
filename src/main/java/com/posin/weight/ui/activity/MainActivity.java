@@ -53,7 +53,7 @@ import butterknife.OnClick;
  * FileName: MainActivity
  * Author: Greetty
  * Time: 2018/5/23 20:06
- * Desc: 在线更新系统主界面
+ * Description: 在线更新系统主界面
  */
 public class MainActivity extends BaseActivity implements WeightContract.IWeightView,
         WeightDialog.WeightDialogView, RvFoodTypeDetailAdapter.RvFoodTypeDetailView,
@@ -93,10 +93,16 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
     private static final String TAG = "MainActivity";
 
     /**
-     * 客显显示非重量值时，显示时长
+     * LED客显显示非重量值时，显示时长
      * 单位：毫秒
      */
-    private static final int SECONDARY_DISPLAY_SHOW_NOT_WEIGHT_TIME = 3650;
+    private static final int SECONDARY_LED_DISPLAY_SHOW_NOT_WEIGHT_TIME = 3650;
+
+    /**
+     * LCD客显显示非重量值时，显示时长
+     * 单位：毫秒
+     */
+    private static final int SECONDARY_LCD_DISPLAY_SHOW_NOT_WEIGHT_TIME = 2000;
     //菜单列表
     private List<MenuDetail> menuDetailList;
     //菜品种类下所有菜式
@@ -422,7 +428,8 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
 //                Log.e(TAG, System.currentTimeMillis() + " - " + mSecShowOthersTime + " = " +
 //                        (System.currentTimeMillis() - mSecShowOthersTime));
                 if (mLcdShowInit) {
-                    if (System.currentTimeMillis() - mSecShowOthersTime >= 1000) {
+                    if (System.currentTimeMillis() - mSecShowOthersTime >=
+                            SECONDARY_LCD_DISPLAY_SHOW_NOT_WEIGHT_TIME) {
                         SecDisplayUtils.getInstance().displayLcdPrice(isZh ? "欢迎光临" : "Welcome",
                                 "0.00", secFormatWight, "0.00");
                         mLcdShowInit = false;
@@ -440,7 +447,7 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
                 }
             } else {
                 if (System.currentTimeMillis() - mSecShowOthersTime >=
-                        SECONDARY_DISPLAY_SHOW_NOT_WEIGHT_TIME) {  //不显示其他数据时，动态显示重量
+                        SECONDARY_LED_DISPLAY_SHOW_NOT_WEIGHT_TIME) {  //不显示其他数据时，动态显示重量
                     SecDisplayUtils.getInstance().displayWeight(secFormatWight);
                 }
             }

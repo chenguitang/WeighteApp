@@ -24,7 +24,7 @@ import butterknife.OnClick;
  * FileName: WeightDialog
  * Author: Greetty
  * Time: 2018/6/21 15:20
- * Desc: TODO
+ * Description: TODO
  */
 public class WeightDialog extends BaseDialog {
 

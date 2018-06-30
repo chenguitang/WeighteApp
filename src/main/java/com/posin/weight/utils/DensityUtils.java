@@ -6,7 +6,7 @@ import android.content.Context;
  * FileName: DensityUtils
  * Author: Greetty
  * Time: 2018/6/21 19:27
- * Desc: TODO
+ * Description: TODO
  */
 public class DensityUtils {
 

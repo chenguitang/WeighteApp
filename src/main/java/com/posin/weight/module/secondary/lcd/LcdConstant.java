@@ -4,7 +4,7 @@ package com.posin.weight.module.secondary.lcd;
  * FileName: LcdConstant
  * Author: Greetty
  * Time: 2018/6/27 15:55
- * Desc: TODO
+ * Description: TODO
  */
 public class LcdConstant {
 

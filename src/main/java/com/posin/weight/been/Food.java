@@ -4,7 +4,7 @@ package com.posin.weight.been;
  * FileName: Food
  * Author: Greetty
  * Time: 2018/6/13 16:15
- * Desc: TODO
+ * Description: TODO
  */
 public class Food {
 

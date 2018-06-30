@@ -4,7 +4,7 @@ package com.posin.weight.module.printer;
  * FileName: PrinterStyle
  * Author: Greetty
  * Time: 2018/6/21 20:04
- * Desc: TODO
+ * Description: TODO
  */
 public class PrinterStyle {
 

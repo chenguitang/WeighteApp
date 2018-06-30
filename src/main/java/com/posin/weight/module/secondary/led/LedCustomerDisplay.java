@@ -9,7 +9,7 @@ import com.posin.device.SerialPortConfiguration;
  * FileName: LedCustomerDisplay
  * Author: Greetty
  * Time: 2018/6/14 14:54
- * Desc: LED客显
+ * Description: LED客显
  */
 public class LedCustomerDisplay {
 
