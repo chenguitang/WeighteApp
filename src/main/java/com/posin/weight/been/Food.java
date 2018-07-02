@@ -12,14 +12,18 @@ public class Food {
     private String name;
     //菜品单价
     private double prices;
+    //是否为称重商品
+    private boolean weightFood;
 
 
-    public Food(String name, double prices) {
+    public Food(String name, double prices, boolean weightFood) {
         this.name = name;
         this.prices = prices;
+        this.weightFood = weightFood;
     }
 
-    public Food(){}
+    public Food() {
+    }
 
     public String getName() {
         return name;
@@ -37,10 +41,19 @@ public class Food {
         this.prices = prices;
     }
 
+    public boolean isWeightFood() {
+        return weightFood;
+    }
+
+    public void setWeightFood(boolean weightFood) {
+        this.weightFood = weightFood;
+    }
+
     @Override
     public String toString() {
         return "Food{" +
                 "name='" + name + '\'' +
+                "weightFood='" + weightFood + '\'' +
                 ", prices=" + prices +
                 '}';
     }

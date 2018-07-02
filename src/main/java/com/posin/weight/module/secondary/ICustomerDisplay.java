@@ -41,7 +41,18 @@ public interface ICustomerDisplay {
      * @param subtotal 小计
      * @throws Exception
      */
-    void displayLcdPrice(String name, String value, String weight, String subtotal) throws Exception;
+    void displayLcdFoodByWeight(String name, String value, String weight, String subtotal) throws Exception;
+
+    /**
+     * 单价
+     *
+     * @param name     名字
+     * @param value    单价
+     * @param weight   重量
+     * @param subtotal 小计
+     * @throws Exception
+     */
+    void displayLcdFoodByAmount(String name, String value, String weight, String subtotal) throws Exception;
 
     /**
      * LED客显显示单价

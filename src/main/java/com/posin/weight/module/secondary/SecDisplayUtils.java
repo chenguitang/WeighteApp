@@ -84,7 +84,7 @@ public class SecDisplayUtils implements ICustomerDisplay {
     }
 
     @Override
-    public void displayLcdPrice(String name, String value, String weight,
+    public void displayLcdFoodByWeight(String name, String value, String weight,
                                 String subtotal) throws IOException {
         if (isLcd()) {
             mLcdCustomerDisplay.setCursorPos(0, 0);
@@ -92,6 +92,24 @@ public class SecDisplayUtils implements ICustomerDisplay {
 
             mLcdCustomerDisplay.setCursorPos(1, 0);
             mLcdCustomerDisplay.displayWeight(weight);
+
+            mLcdCustomerDisplay.setCursorPos(2, 0);
+            mLcdCustomerDisplay.displayPrice(value);
+
+            mLcdCustomerDisplay.setCursorPos(3, 0);
+            mLcdCustomerDisplay.displaySubtotal(subtotal);
+        }
+    }
+
+    @Override
+    public void displayLcdFoodByAmount(String name, String value, String weight,
+                                       String subtotal) throws IOException {
+        if (isLcd()) {
+            mLcdCustomerDisplay.setCursorPos(0, 0);
+            mLcdCustomerDisplay.displayName(name);
+
+            mLcdCustomerDisplay.setCursorPos(1, 0);
+            mLcdCustomerDisplay.displayAmount(weight);
 
             mLcdCustomerDisplay.setCursorPos(2, 0);
             mLcdCustomerDisplay.displayPrice(value);

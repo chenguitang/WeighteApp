@@ -24,5 +24,6 @@
     <string name="pay_change_money">找零金额(元)</string>
     <string name="pay_sum_default">￥0.0</string>
     <string name="close">关闭</string>
+    <string name="amount">数量</string>
 
 </resources>

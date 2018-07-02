@@ -40,6 +40,8 @@ public class WeightDialog extends BaseDialog {
     TextView tvGetWeightWeight;
     @BindView(R.id.tv_get_weight_money)
     TextView tvGetWeightMoney;
+    @BindView(R.id.tv_get_weight_weight_tip)
+    TextView tvWeightTip;
 
     private static final String TAG = "WeightDialog";
     /**
@@ -50,6 +52,7 @@ public class WeightDialog extends BaseDialog {
     private Context mContext;
     private String mFoodName;
     private double mPrices;
+    private boolean mWeightFood;
     private WeightPresenter mWeightPresenter;
     private WeightDialogView mWeightDialogView;
 
@@ -61,12 +64,13 @@ public class WeightDialog extends BaseDialog {
     //是否为中文
     private boolean isZh = true;
 
-    public WeightDialog(Context context, String foodName, double prices,
+    public WeightDialog(Context context, String foodName, double prices, boolean weightFood,
                         WeightPresenter weightPresenter, WeightDialogView weightDialogView) {
         super(context);
         this.mContext = context;
         this.mFoodName = foodName;
         this.mPrices = prices;
+        this.mWeightFood = weightFood;
         this.mWeightPresenter = weightPresenter;
         this.mWeightDialogView = weightDialogView;
         isZh = LanguageUtils.isZh(context);
@@ -100,14 +104,22 @@ public class WeightDialog extends BaseDialog {
         tvGetWeightPrinces.setText(isZh ? StringUtils.append(mPrices, " 元") :
                 StringUtils.append("$", mPrices));
 
-        try {
-            mWeight = mWeightPresenter.getWeight();
-            mSubtotal = DoubleUtil.round(mWeight * mPrices, 2);
-            tvGetWeightWeight.setText(String.format("%.3f KG", mWeight));
-            tvGetWeightMoney.setText(isZh ? StringUtils.append(mSubtotal, " 元") :
-                    StringUtils.append("$", mSubtotal));
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (mWeightFood) {
+            try {
+                tvWeightTip.setText(R.string.get_weight_weight_tip);
+                mWeight = mWeightPresenter.getWeight();
+                mSubtotal = DoubleUtil.round(mWeight * mPrices, 2);
+                tvGetWeightWeight.setText(String.format("%.3f KG", mWeight));
+                tvGetWeightMoney.setText(isZh ? StringUtils.append(mSubtotal, " 元") :
+                        StringUtils.append("$", mSubtotal));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            tvWeightTip.setText(R.string.amount);
+            tvGetWeightWeight.setText("1");
+            tvGetWeightMoney.setText(isZh ? StringUtils.append(mPrices, " 元") :
+                    StringUtils.append("$", mPrices));
         }
     }
 
@@ -119,8 +131,13 @@ public class WeightDialog extends BaseDialog {
                 mWeightDialogView.getWeightCancel();
                 break;
             case R.id.btn_weight_ok:
-                MenuDetail menuDetail = new MenuDetail(mFoodName, DoubleUtil.round(mWeight, 2),
-                        mPrices, mSubtotal);
+                MenuDetail menuDetail;
+                if (mWeightFood) {
+                    menuDetail = new MenuDetail(mFoodName, DoubleUtil.round(mWeight, 2),
+                            mPrices, mSubtotal);
+                } else {
+                    menuDetail = new MenuDetail(mFoodName, 1, mPrices, mPrices);
+                }
                 mWeightDialogView.getWeightOk(menuDetail);
                 break;
             default:

@@ -1,5 +1,6 @@
 package com.posin.weight.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v7.view.menu.MenuBuilder;
@@ -131,6 +132,7 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
     private double mSum;
     private boolean isZh = true;
     private boolean isLcd = false;
+    private boolean isUpdateWeight = true;
 
     @Override
     public int getLayoutId() {
@@ -190,24 +192,50 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
     /**
      * 点击选择具体某个商品
      */
+    @SuppressLint("DefaultLocale")
     @Override
     public void onTypeDetailItemClick(int position, Food food) {
         if (mWeightDialog == null) {
             mWeightDialog = new WeightDialog(MainActivity.this, food.getName(), food.getPrices(),
-                    mWeightPresenter, MainActivity.this);
+                    food.isWeightFood(), mWeightPresenter, MainActivity.this);
             mWeightDialog.show();
-
-            //控制客显显示内容
-            try {
-                float weight = mWeightPresenter.getWeight();
-                SecDisplayUtils.getInstance().displayLcdPrice(
-                        String.valueOf(food.getName())
-                        , String.valueOf(food.getPrices())
-                        , String.format("%.3f", weight)
-                        , String.valueOf(DoubleUtil.round(weight * food.getPrices(), 2))
-                );
-            } catch (Exception e) {
-                e.printStackTrace();
+            isUpdateWeight = food.isWeightFood();
+            mLcdShowInit = false;
+            if (isLcd) {
+                if (food.isWeightFood()) {
+                    //控制客显显示内容
+                    try {
+                        float weight = mWeightPresenter.getWeight();
+                        SecDisplayUtils.getInstance().displayLcdFoodByWeight(
+                                String.valueOf(food.getName())
+                                , String.valueOf(food.getPrices())
+                                , String.format("%.3f", weight)
+                                , String.valueOf(DoubleUtil.round(weight * food.getPrices(), 2))
+                        );
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    //控制客显显示内容
+                    try {
+                        SecDisplayUtils.getInstance().displayLcdFoodByAmount(
+                                String.valueOf(food.getName())
+                                , String.valueOf(food.getPrices())
+                                , String.valueOf(1)
+                                , String.valueOf(DoubleUtil.round(food.getPrices(), 2))
+                        );
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else {
+                if (!food.isWeightFood()) {
+                    try {
+                        SecDisplayUtils.getInstance().displayLedPrice(String.valueOf(food.getPrices()));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         } else {
             Log.e(TAG, "mWeightDialog !=null ,Please close the Dialog that is being displayed");
@@ -252,6 +280,10 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rl_item_delete:
+                if (menuDetailList.size() <= 0) {
+                    return;
+                }
+
                 int position = rvMenuDetailAdapter.getSelectedPosition();
                 if (position >= 0) {
                     mSum = DoubleUtil.sub(mSum, menuDetailList.get(position).getSubtotal());
@@ -270,14 +302,20 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
 
                 //更新客显
                 try {
+                    isUpdateWeight = true;
                     if (isLcd) {
-                        SecDisplayUtils.getInstance().displayUpdateFood(isZh ? "欢迎光临" :
-                                "Welcome", "0.00", "0.00");
+//                        SecDisplayUtils.getInstance().displayUpdateFood(isZh ? "欢迎光临" :
+//                                "Welcome", "0.00", "0.00");
+                            float weight = mWeightPresenter.getWeight();
+                            SecDisplayUtils.getInstance().displayLcdFoodByWeight(isZh ? "欢迎光临" : "Welcome",
+                                    "0.00", String.format("%.3f", weight), "0.00");
+                            mLcdShowInit = false;
+
                     } else {
                         SecDisplayUtils.getInstance().displayTotal(String.valueOf(mSum));
                         mSecShowOthersTime = System.currentTimeMillis();
                     }
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 break;
@@ -397,17 +435,17 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
 
     @Override
     public void overLoadMark() {
-        tvWeight.setText(isZh?"过载":"Overload");
+        tvWeight.setText(isZh ? "过载" : "Overload");
     }
 
     @Override
     public void openZeroHighMark() {
-        tvWeight.setText(isZh?"零点高":"Zero point high");
+        tvWeight.setText(isZh ? "零点高" : "Zero point high");
     }
 
     @Override
     public void openZeroLowMark() {
-        tvWeight.setText(isZh?"零点低":"Zero point low");
+        tvWeight.setText(isZh ? "零点低" : "Zero point low");
     }
 
     @Override
@@ -416,13 +454,20 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
         float weightFloat = weight / 1000.0f;
         tvWeight.setText(String.format("%.3f KG", weightFloat));
 
+
+        if (!isUpdateWeight) {
+            return;
+        }
+
         //如果有dialog弹框，同步dialog中显示的重量
         if (mWeightDialog != null) {
             mWeightDialog.updateWeight(weightFloat);
         }
+
         //客显显示实时重量
         try {
             String secFormatWight = String.format("%.3f", weightFloat);
+
 
             if (isLcd) {
 //                Log.e(TAG, System.currentTimeMillis() + " - " + mSecShowOthersTime + " = " +
@@ -430,7 +475,7 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
                 if (mLcdShowInit) {
                     if (System.currentTimeMillis() - mSecShowOthersTime >=
                             SECONDARY_LCD_DISPLAY_SHOW_NOT_WEIGHT_TIME) {
-                        SecDisplayUtils.getInstance().displayLcdPrice(isZh ? "欢迎光临" : "Welcome",
+                        SecDisplayUtils.getInstance().displayLcdFoodByWeight(isZh ? "欢迎光临" : "Welcome",
                                 "0.00", secFormatWight, "0.00");
                         mLcdShowInit = false;
                     }
@@ -494,6 +539,8 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
             }
         } catch (Throwable e) {
             e.printStackTrace();
+        } finally {
+            isUpdateWeight = true;
         }
 
     }
@@ -511,6 +558,11 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
 
         //显示单价，更新客显显示非重量的时间
         mSecShowOthersTime = System.currentTimeMillis();
+        if (!isUpdateWeight) {
+            mLcdShowInit = true;
+        }
+        isUpdateWeight = true;
+
         try {
             SecDisplayUtils.getInstance().displayLedPrice(String.valueOf(menuDetail.getPrices()));
         } catch (IOException e) {
@@ -539,7 +591,18 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
             }
             mPayDialog = null;
         }
-        mLcdShowInit = true;
+
+        if (isLcd) {
+            try {
+                float weight = mWeightPresenter.getWeight();
+                SecDisplayUtils.getInstance().displayLcdFoodByWeight(isZh ? "欢迎光临" : "Welcome",
+                        "0.00", String.format("%.3f", weight), "0.00");
+                mLcdShowInit = false;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     @Override
@@ -604,7 +667,7 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
     @Override
     public void displayChange(String value) {
         try {
-            SecDisplayUtils.getInstance().displayChange(value);
+            SecDisplayUtils.getInstance().displayChange(value.indexOf(".")==0?"0.00":value);
             //显示找零，更新客显显示非重量的时间
             mSecShowOthersTime = System.currentTimeMillis();
         } catch (IOException e) {

@@ -167,6 +167,23 @@ public class LcdCustomerDisplay {
     }
 
     /**
+     * 显示数量
+     *
+     * @param value String
+     * @throws IOException
+     */
+    public void displayAmount(String value) throws IOException {
+        if (isZh) {
+            mCustomerDisplay.write(StringUtils.append("数量:", value,
+                    StringUtils.appendSpace(LcdConstant.getLineLength() - value.length() - 5)));
+        } else {
+            mCustomerDisplay.write(StringUtils.append("Amount:", value,
+                    StringUtils.appendSpace(LcdConstant.getLineLength() - value.length() - 6)));
+
+        }
+    }
+
+    /**
      * 显示优惠金额
      *
      * @param value String
