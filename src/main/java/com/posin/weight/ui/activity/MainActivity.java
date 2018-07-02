@@ -150,7 +150,11 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
         }
 
         isZh = LanguageUtils.isZh(this);
-        isLcd = SecDisplayUtils.getInstance().isLcd();
+        try {
+            isLcd = SecDisplayUtils.getInstance().isLcd();
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         mWeightPresenter = new WeightPresenter(this, this, mHandler);
         initAdapter();
 
@@ -232,7 +236,7 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
                 if (!food.isWeightFood()) {
                     try {
                         SecDisplayUtils.getInstance().displayLedPrice(String.valueOf(food.getPrices()));
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -270,7 +274,7 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
                 mSecShowOthersTime = System.currentTimeMillis();
                 SecDisplayUtils.getInstance().displayLedPrice(String.valueOf(menuDetail.getPrices()));
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -565,7 +569,7 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
 
         try {
             SecDisplayUtils.getInstance().displayLedPrice(String.valueOf(menuDetail.getPrices()));
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -643,7 +647,7 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
             SecDisplayUtils.getInstance().displayTotal(value);
             //显示总计，更新客显显示非重量的时间
             mSecShowOthersTime = System.currentTimeMillis();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -659,7 +663,7 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
 
             //显示支付，更新客显显示非重量的时间
             mSecShowOthersTime = System.currentTimeMillis();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -670,7 +674,7 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
             SecDisplayUtils.getInstance().displayChange(value.indexOf(".")==0?"0.00":value);
             //显示找零，更新客显显示非重量的时间
             mSecShowOthersTime = System.currentTimeMillis();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

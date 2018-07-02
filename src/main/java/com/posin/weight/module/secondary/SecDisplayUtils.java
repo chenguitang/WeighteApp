@@ -25,7 +25,7 @@ public class SecDisplayUtils implements ICustomerDisplay {
     private LcdCustomerDisplay mLcdCustomerDisplay;
 
 
-    private static class SecDisplayUtilsHolder {
+    private static class SecDisplayUtilsHolder  {
         private static final SecDisplayUtils Instance = new SecDisplayUtils();
     }
 
@@ -34,7 +34,10 @@ public class SecDisplayUtils implements ICustomerDisplay {
      *
      * @return SecDisplayUtils
      */
-    public static SecDisplayUtils getInstance() {
+    public static SecDisplayUtils getInstance() throws Exception {
+        if (SecDisplayUtilsHolder.Instance==null){
+            throw new Exception("SecDisplayUtils Instance is null ...");
+        }
         return SecDisplayUtilsHolder.Instance;
     }
 
