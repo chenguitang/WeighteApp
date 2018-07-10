@@ -90,6 +90,8 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
     RelativeLayout rlItemDelete;
     @BindView(R.id.tv_pay)
     TextView tvPay;
+    @BindView(R.id.tv_open_setting)
+    View tvOpenSetting;
 
     private static final String TAG = "MainActivity";
 
@@ -158,7 +160,8 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
         mWeightPresenter = new WeightPresenter(this, this, mHandler);
         initAdapter();
 
-        commonToolbar.setOnTouchListener(this);
+//        commonToolbar.setOnTouchListener(this);
+        tvOpenSetting.setOnTouchListener(this);
     }
 
     @Override
@@ -310,10 +313,10 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
                     if (isLcd) {
 //                        SecDisplayUtils.getInstance().displayUpdateFood(isZh ? "欢迎光临" :
 //                                "Welcome", "0.00", "0.00");
-                            float weight = mWeightPresenter.getWeight();
-                            SecDisplayUtils.getInstance().displayLcdFoodByWeight(isZh ? "欢迎光临" : "Welcome",
-                                    "0.00", String.format("%.3f", weight), "0.00");
-                            mLcdShowInit = false;
+                        float weight = mWeightPresenter.getWeight();
+                        SecDisplayUtils.getInstance().displayLcdFoodByWeight(isZh ? "欢迎光临" : "Welcome",
+                                "0.00", String.format("%.3f", weight), "0.00");
+                        mLcdShowInit = false;
 
                     } else {
                         SecDisplayUtils.getInstance().displayTotal(String.valueOf(mSum));
@@ -366,6 +369,7 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
     @Override
     public void initToolBar() {
         mCommonToolbar.setLogo(R.mipmap.scalen);
+//        mCommonToolbar.setNavigationIcon(R.mipmap.scalen);
         mCommonToolbar.setTitle(R.string.app_name);
 
     }
@@ -671,7 +675,7 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
     @Override
     public void displayChange(String value) {
         try {
-            SecDisplayUtils.getInstance().displayChange(value.indexOf(".")==0?"0.00":value);
+            SecDisplayUtils.getInstance().displayChange(value.indexOf(".") == 0 ? "0.00" : value);
             //显示找零，更新客显显示非重量的时间
             mSecShowOthersTime = System.currentTimeMillis();
         } catch (Exception e) {
@@ -716,7 +720,34 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
                         }
                     }
                 }
+
+            case R.id.tv_open_setting:
+                if (MotionEvent.ACTION_DOWN == event.getAction()) {
+                    Log.d(TAG, "************* pressed");
+                    if (!mPressed) {
+                        mPressed = true;
+                        mDownTime = SystemClock.uptimeMillis();
+                    }
+                } else if (MotionEvent.ACTION_UP == event.getAction()) {
+                    Log.d(TAG, "************* release");
+                    if (mPressed) {
+                        mPressed = false;
+                        long interval = SystemClock.uptimeMillis() - mDownTime;
+                        Log.d(TAG, "interval time: " + interval);
+                        if (interval > 5000 && interval < 10000) {
+                            if (mWeightPresenter.getIScaleService() == null) {
+                                Toast.makeText(MainActivity.this, "错误: 无法连接称重服务程序",
+                                        Toast.LENGTH_SHORT).show();
+                                return false;
+                            }
+                            new SetWeightPointDialog(MainActivity.this, mWeightPresenter);
+                        }
+                    }
+                }
+                return true;
+            default:
+                return false;
+
         }
-        return false;
     }
 }

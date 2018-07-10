@@ -56,9 +56,9 @@ public class SetWeightPointDialog extends AbstractInputDialog {
                 int ad, weight;
                 try {
                     ad = iWeight.getCurrentAd();
+                    mAdValue.setText(String.valueOf(ad));
                     weight = mWeightPresenter.getWeightInstance().getNetWeight();
                     //Log.d(TAG, "ad="+ad+", temp="+tmp);
-                    mAdValue.setText(String.valueOf(ad));
                     mWeightValue.setText(String.valueOf(weight));
                 } catch (Throwable e) {
                     e.printStackTrace();

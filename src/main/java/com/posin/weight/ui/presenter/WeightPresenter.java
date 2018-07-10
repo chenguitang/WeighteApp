@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.os.ServiceManager;
+import android.util.Log;
 
 import com.posin.svr.IScaleService;
 import com.posin.weight.been.Weight;
@@ -12,6 +13,8 @@ import com.posin.weight.module.weight.ErrorCode;
 import com.posin.weight.module.weight.WeightUtils;
 import com.posin.weight.ui.contract.WeightContract;
 import com.posin.weight.utils.StringUtils;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * FileName: WeightPresenter
@@ -105,10 +108,7 @@ public class WeightPresenter implements WeightContract.IWeightPresenter {
 
     @Override
     public Weight getWeightInstance() throws Exception {
-        if (mWeight == null) {
-            throw new Exception("Weight services is null, please bindService");
-        }
-        return mWeight;
+        return WeightUtils.getWeight(iWeight);
     }
 
     @Override
@@ -145,7 +145,6 @@ public class WeightPresenter implements WeightContract.IWeightPresenter {
         if (iWeight == null) {
             throw new Exception("IScaleService services is null, please bindService");
         }
-
         int ec = iWeight.getErrorCode();
         if (ec != ErrorCode.ERR_OK) {
             updateErrorCode(ec);
