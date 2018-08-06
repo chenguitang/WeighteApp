@@ -26,4 +26,17 @@
     <string name="close">Close</string>
     <string name="amount">amount</string>
 
+    <!--错误提示-->
+    <string name="error_decimal">Decimal places are\n not correct</string>
+    <string name="error_serial">Failure to open\n serial port</string>
+    <string name="error_ad_correspond">AD communication\n failure</string>
+    <string name="error_compare">Uncalibrated or\n communication failures</string>
+    <string name="error_ad">AD error</string>
+    <string name="error_un_connect">Unable to\n connect service</string>
+    <string name="error_un_know">Unknown error!</string>
+
+    <string name="exit_app">Exit application</string>
+    <string name="serial_setting">Serial setting</string>
+
+
 </resources>

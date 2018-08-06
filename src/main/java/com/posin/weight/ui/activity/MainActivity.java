@@ -713,7 +713,8 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
                         Log.d(TAG, "interval time: " + interval);
                         if (interval > 5000 && interval < 10000) {
                             if (mWeightPresenter.getIScaleService() == null) {
-                                Toast.makeText(MainActivity.this, "错误: 无法连接称重服务程序",
+                                Toast.makeText(MainActivity.this, isZh ? "错误: 无法连接称重服务程序" :
+                                                "Error: unable to connect weighing service program",
                                         Toast.LENGTH_SHORT).show();
                                 return false;
                             }
@@ -737,7 +738,8 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
                         Log.d(TAG, "interval time: " + interval);
                         if (interval > 5000 && interval < 10000) {
                             if (mWeightPresenter.getIScaleService() == null) {
-                                Toast.makeText(MainActivity.this, "错误: 无法连接称重服务程序",
+                                Toast.makeText(MainActivity.this, isZh ? "错误: 无法连接称重服务程序" :
+                                                "Error: unable to connect weighing service program",
                                         Toast.LENGTH_SHORT).show();
                                 return false;
                             }

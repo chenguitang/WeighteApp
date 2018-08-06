@@ -12,7 +12,7 @@
         app:showAsAction="never"/>
 
     <item android:id="@+id/system_exit"
-        android:title="退出应用"
+        android:title="@string/exit_app"
         android:icon="@mipmap/ic_exit"
         android:orderInCategory="90"
         app:showAsAction="never"/>

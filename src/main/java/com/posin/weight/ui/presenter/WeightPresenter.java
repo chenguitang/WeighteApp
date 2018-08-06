@@ -8,6 +8,7 @@ import android.os.ServiceManager;
 import android.util.Log;
 
 import com.posin.svr.IScaleService;
+import com.posin.weight.R;
 import com.posin.weight.been.Weight;
 import com.posin.weight.module.weight.ErrorCode;
 import com.posin.weight.module.weight.WeightUtils;
@@ -164,7 +165,7 @@ public class WeightPresenter implements WeightContract.IWeightPresenter {
                     //重量
                     mWeightView.updateWeight(mWeight.getNetWeight());
                 } else {
-                    mWeightView.weightError(StringUtils.append("小数位不正确 ", pointNumber));
+                    mWeightView.weightError(StringUtils.append(R.string.error_decimal, pointNumber));
                 }
 
                 //是否稳定
@@ -181,17 +182,17 @@ public class WeightPresenter implements WeightContract.IWeightPresenter {
 
     private void updateErrorCode(int ec) {
         if ((ec & ErrorCode.ERR_SP_FAILED) != 0) {
-            mWeightView.weightError("打开串口失败");
+            mWeightView.weightError(mContext.getString(R.string.error_serial));
         } else if ((ec & ErrorCode.ERR_CONN_FAILED) != 0) {
-            mWeightView.weightError("AD通信失败");
+            mWeightView.weightError(mContext.getString(R.string.error_ad_correspond));
         } else if ((ec & ErrorCode.ERR_NO_WEIGHT_TABLE) != 0) {
-            mWeightView.weightError("未校准或\n通信故障");
+            mWeightView.weightError(mContext.getString(R.string.error_compare));
         } else if ((ec & ErrorCode.ERR_INCORRECT_AD) != 0) {
-            mWeightView.weightError("AD错误");
+            mWeightView.weightError(mContext.getString(R.string.error_ad));
         } else if ((ec & ErrorCode.ERR_SERVICE_DISCONNECTED) != 0) {
-            mWeightView.weightError("无法连接\n称重服务程序");
+            mWeightView.weightError(mContext.getString(R.string.error_un_connect));
         } else {
-            mWeightView.weightError("未知错误!");
+            mWeightView.weightError(mContext.getString(R.string.error_un_know));
         }
     }
 }

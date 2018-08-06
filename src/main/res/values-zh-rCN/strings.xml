@@ -26,4 +26,15 @@
     <string name="close">关闭</string>
     <string name="amount">数量</string>
 
+    <!--错误提示-->
+    <string name="error_decimal">小数位不正确</string>
+    <string name="error_serial">打开串口失败</string>
+    <string name="error_ad_correspond">AD通信失败</string>
+    <string name="error_compare">未校准或\n通信故障</string>
+    <string name="error_ad">AD错误</string>
+    <string name="error_un_connect">无法连接\n称重服务程序</string>
+    <string name="error_un_know">未知错误!</string>
+
+    <string name="exit_app">退出应用</string>
+    <string name="serial_setting">串口设置</string>
 </resources>
