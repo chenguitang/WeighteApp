@@ -28,6 +28,9 @@ public class WeightUtils {
         }
 
         int[] d = iWeight.getWeight();
+        if (d == null || d.length == 0) {
+            return null;
+        }
         long tick = d[14] & 0xFFFFFFFFL;
         tick = System.currentTimeMillis() - (SystemClock.uptimeMillis() - tick);
         return new Weight(

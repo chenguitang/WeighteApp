@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.RemoteException;
 import android.util.Log;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import com.posin.svr.IScaleService;
 import com.posin.weight.R;
 import com.posin.weight.been.Weight;
+import com.posin.weight.ui.activity.AdViewActivity;
 import com.posin.weight.ui.presenter.WeightPresenter;
 
 import java.util.HashMap;
@@ -42,6 +44,7 @@ public class SetWeightPointDialog extends AbstractInputDialog {
     private EditText mWeightValue;
     private CheckBox mAutoPrecision;
     private Button mBtnSave;
+    private Button mBtnOpenAdView;
 
     private Handler mHandler = new Handler();
     private static IScaleService iWeight;
@@ -187,6 +190,7 @@ public class SetWeightPointDialog extends AbstractInputDialog {
         mPrecision = (EditText) v.findViewById(R.id.ed_precision);
         mWeightValue = (EditText) v.findViewById(R.id.ed_weight);
         mAutoPrecision = (CheckBox) v.findViewById(R.id.cb_auto_precision);
+        mBtnOpenAdView = (Button) v.findViewById(R.id.btn_open_ad_view);
 
         mWeightItems = new AdWeightItem[MAX_WEIGHT_COUNT];
         mWeightItems[4] = new AdWeightItem(4, 30, R.id.ed_weight4, R.id.ed_ad4, R.id.btn_set_weight4, v);
@@ -228,6 +232,12 @@ public class SetWeightPointDialog extends AbstractInputDialog {
             }
         });
 
+        mBtnOpenAdView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mContext.startActivity(new Intent(mContext, AdViewActivity.class));
+            }
+        });
         mAutoPrecision.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton v, boolean checked) {

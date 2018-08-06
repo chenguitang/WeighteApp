@@ -48,4 +48,19 @@ interface IScaleService {
 
 	// 获取一个稳定的AD值，在timeout时间内完成，返回0为失败
 	int getSteadyAd(long timeout);
+
+    /* 读一次AD数据，如1秒钟没有数据来，返回错误。
+              这是阻塞方法，不能在UI线程调用。
+
+             返回数据格式: 偶数序列为ID号,奇数序列为该ID的值
+		  int[] result = readValues(MAX_ID_COUNT);
+		  // result[0] : id0
+		  // result[1] : id0 对应的 value
+		  // result[2] : id1
+		  // result[3] : id1 对应的 value
+		  // result[4] : id2
+		  // result[5] : id2 对应的 value
+		  ...
+	*/
+	int[] readValues(int maxId);
 }
