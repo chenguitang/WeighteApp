@@ -695,6 +695,9 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
         }
     }
 
+    private int mTouchCount = 0;
+    private long mTouchTotalTime;
+
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         switch (v.getId()) {
@@ -723,30 +726,28 @@ public class MainActivity extends BaseActivity implements WeightContract.IWeight
                     }
                 }
 
+
             case R.id.tv_open_setting:
                 if (MotionEvent.ACTION_DOWN == event.getAction()) {
-                    Log.d(TAG, "************* pressed");
-                    if (!mPressed) {
-                        mPressed = true;
-                        mDownTime = SystemClock.uptimeMillis();
+                    if (SystemClock.uptimeMillis() - mTouchTotalTime > 4000 || mTouchCount == 0) {
+                        mTouchTotalTime = SystemClock.uptimeMillis();
+                        mTouchCount = 0;
                     }
                 } else if (MotionEvent.ACTION_UP == event.getAction()) {
-                    Log.d(TAG, "************* release");
-                    if (mPressed) {
-                        mPressed = false;
-                        long interval = SystemClock.uptimeMillis() - mDownTime;
-                        Log.d(TAG, "interval time: " + interval);
-                        if (interval > 5000 && interval < 10000) {
-                            if (mWeightPresenter.getIScaleService() == null) {
-                                Toast.makeText(MainActivity.this, isZh ? "错误: 无法连接称重服务程序" :
-                                                "Error: unable to connect weighing service program",
-                                        Toast.LENGTH_SHORT).show();
-                                return false;
-                            }
-                            new SetWeightPointDialog(MainActivity.this, mWeightPresenter);
+                    mTouchCount++;
+                    Log.d(TAG, "time : " + (SystemClock.uptimeMillis() - mTouchTotalTime) +"  count: "+mTouchCount);
+                    if (SystemClock.uptimeMillis() - mTouchTotalTime <= 4000 && mTouchCount == 5) {
+                        mTouchCount = 0;
+                        if (mWeightPresenter.getIScaleService() == null) {
+                            Toast.makeText(MainActivity.this, isZh ? "错误: 无法连接称重服务程序" :
+                                            "Error: unable to connect weighing service program",
+                                    Toast.LENGTH_SHORT).show();
+                            return false;
                         }
+                        new SetWeightPointDialog(MainActivity.this, mWeightPresenter);
                     }
                 }
+
                 return true;
             default:
                 return false;
