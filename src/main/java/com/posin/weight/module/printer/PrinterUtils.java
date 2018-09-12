@@ -28,7 +28,7 @@ public class PrinterUtils {
     }
 
     public PrinterUtils() {
-        mSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:dd:ss");
+        mSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     }
 
     public void printMenuDetail(List<MenuDetail> menuDetailList, double sumMoney, double alreadyPay,
