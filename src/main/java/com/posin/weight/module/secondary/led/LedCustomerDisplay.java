@@ -13,6 +13,17 @@ import com.posin.device.SerialPortConfiguration;
  */
 public class LedCustomerDisplay {
 
+    /**
+     * 显示类型控制指令
+     *
+     * 30 全部清空类型
+     * 31 单价
+     * 32 总计
+     * 33 付款
+     * 34 找零
+     * 35 全亮
+     */
+
     /*
      * 用串口发送指令
      */
@@ -108,6 +119,7 @@ public class LedCustomerDisplay {
      */
     public void displayWeight(String value) throws IOException {
         value += "\r";
+        mSerialPort.getOutputStream().write(new byte[]{0x1B, 0x73, 0x30});
         mSerialPort.getOutputStream().write(value.getBytes());
     }
 

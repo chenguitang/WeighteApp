@@ -2,14 +2,15 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
+    //noinspection GradleDependency
     buildToolsVersion "27.0.2"
     defaultConfig {
         applicationId "com.posin.weight"
         minSdkVersion 19
         //noinspection OldTargetApi
         targetSdkVersion 24
-        versionCode 17
-        versionName "Scale_Beat_1.1.7"
+        versionCode 19
+        versionName "Scale_Beat_1.1.9"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

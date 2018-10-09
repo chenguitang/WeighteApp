@@ -18,7 +18,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.activity.AdViewActivity"/>
+        <activity android:name="com.posin.weight.ui.activity.AdViewActivity"/>
 
     </application>
 </manifest>
